@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\GuruOnly;
 use App\Http\Middleware\SiswaOnly;
+use App\Http\Controllers\Admin\RegisterUserController;
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -21,10 +23,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/register', [RegisteredUserController::class, 'create'])
-        ->name('register');
-    Route::post('/register', [RegisteredUserController::class, 'store']);
+Route::middleware(['auth', \App\Http\Middleware\AdminOnly::class])->group(function () {
+    Route::get('/admin/register', [RegisterUserController::class, 'create'])->name('admin.register');
+    Route::post('/admin/register', [RegisterUserController::class, 'store'])->name('admin.register.store');
 });
 
 // Admin
