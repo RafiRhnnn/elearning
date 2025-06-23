@@ -1,13 +1,15 @@
 <aside class="w-64 bg-white shadow-md hidden sm:block">
     <div class="p-6 border-b border-gray-200">
-        <img src="{{ asset('img/logo-utb.png') }}" alt="Logo UTB" class="h-10 mx-auto mb-2">
+        <img src="{{ asset('img/logo.png') }}" alt="Logo UTB" class="h-10 mx-auto mb-2">
         <h1 class="text-xl font-bold text-center text-green-700">Admin Panel</h1>
     </div>
     <nav class="p-4">
         <ul class="space-y-2">
+
             <li>
-                <a href="#"
-                    class="block py-2 px-4 rounded hover:bg-green-100 text-green-700 font-semibold">Dashboard</a>
+                <a href="{{ route('admin.dashboard') }}"
+                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.dashboard') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}"
+                    class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Dashboard</a>
             </li>
             <li>
                 <a href="#" class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Kelola Guru</a>
@@ -27,6 +29,16 @@
                     Kelola User
                 </a>
             </li>
+
+            <li>
+                <a href="{{ route('admin.kelas.index') }}"
+                    class="{{ request()->routeIs('admin.kelas.index') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }} block py-2 px-4 rounded hover:bg-green-100">
+                    Tambah Kelas
+                </a>
+
+
+            </li>
+
 
             <a href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();"

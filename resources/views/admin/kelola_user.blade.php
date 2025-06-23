@@ -28,6 +28,7 @@
                     <th class="px-4 py-2 text-left">Nama</th>
                     <th class="px-4 py-2 text-left">Email</th>
                     <th class="px-4 py-2 text-left">Role</th>
+                    <th class="px-4 py-2 text-left">Kelas</th>
                     <th class="px-4 py-2 text-left">Aksi</th>
                 </tr>
             </thead>
@@ -38,6 +39,10 @@
                         <td class="px-4 py-2">{{ $user->name }}</td>
                         <td class="px-4 py-2">{{ $user->email }}</td>
                         <td class="px-4 py-2 capitalize">{{ $user->role }}</td>
+                        <td class="px-4 py-2">
+                            {{ $user->kelas_id ?? '-' }}
+                        </td>
+
                         <td class="px-4 py-2">
                             <a href="{{ route('admin.kelola_user.edit', $user) }}"
                                 class="text-blue-600 hover:underline mr-2">Edit</a>
