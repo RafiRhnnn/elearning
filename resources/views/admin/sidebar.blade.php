@@ -17,19 +17,25 @@
             </li>
             <li>
                 <a href="{{ route('admin.register') }}"
-                    class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">
+                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.register') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">
                     Register
                 </a>
             </li>
             <li>
-                <a href="{{ route('logout') }}"
-                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                    class="block py-2 px-4 rounded text-red-600 hover:bg-red-100">
-                    Logout
+                <a href="{{ route('admin.kelola_user') }}"
+                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.kelola_user') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">
+                    Kelola User
                 </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
+            </li>
+
+            <a href="{{ route('logout') }}"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                class="block py-2 px-4 rounded text-red-600 hover:bg-red-100">
+                Logout
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
             </li>
         </ul>
     </nav>

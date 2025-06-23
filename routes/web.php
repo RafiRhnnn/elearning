@@ -2,52 +2,69 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Admin\RegisterUserController;
+use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\GuruOnly;
 use App\Http\Middleware\SiswaOnly;
-use App\Http\Controllers\Admin\RegisterUserController;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+// Arahkan root ke halaman login
+Route::get('/', fn() => redirect()->route('login'));
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Dashboard default setelah login (kalau mau redirect berdasar role, atur di LoginController)
+Route::get('/dashboard', fn() => view('dashboard'))
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
+// Profile (semua role bisa akses)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', \App\Http\Middleware\AdminOnly::class])->group(function () {
-    Route::get('/admin/register', [RegisterUserController::class, 'create'])->name('admin.register');
-    Route::post('/admin/register', [RegisterUserController::class, 'store'])->name('admin.register.store');
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', AdminOnly::class])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+
+    // Register User
+    Route::get('/register', [RegisterUserController::class, 'create'])->name('register');
+    Route::post('/register', [RegisterUserController::class, 'store'])->name('register.store');
+
+    // Kelola User
+    Route::get('/kelola-user', [UserManagementController::class, 'index'])->name('kelola_user');
+    Route::get('/kelola-user/{user}/edit', [UserManagementController::class, 'edit'])->name('kelola_user.edit');
+    Route::put('/kelola-user/{user}', [UserManagementController::class, 'update'])->name('kelola_user.update');
+    Route::delete('/kelola-user/{user}', [UserManagementController::class, 'destroy'])->name('kelola_user.destroy');
 });
 
-// Admin
-Route::middleware(['auth', AdminOnly::class])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    });
+/*
+|--------------------------------------------------------------------------
+| Guru Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', GuruOnly::class])->prefix('guru')->name('guru.')->group(function () {
+    Route::get('/dashboard', fn() => view('guru.dashboard'))->name('dashboard');
 });
 
-// Guru
-Route::middleware(['auth', GuruOnly::class])->group(function () {
-    Route::get('/guru/dashboard', function () {
-        return view('guru.dashboard');
-    });
+/*
+|--------------------------------------------------------------------------
+| Siswa Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', SiswaOnly::class])->prefix('siswa')->name('siswa.')->group(function () {
+    Route::get('/dashboard', fn() => view('siswa.dashboard'))->name('dashboard');
 });
 
-// Siswa
-Route::middleware(['auth', SiswaOnly::class])->group(function () {
-    Route::get('/siswa/dashboard', function () {
-        return view('siswa.dashboard');
-    });
-});
-
-
+// Auth default Laravel Breeze (login, logout, dll)
 require __DIR__ . '/auth.php';
