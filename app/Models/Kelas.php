@@ -10,10 +10,10 @@ class Kelas extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
+        'nama',
+        // 'email',
+        // 'password',
+        // 'role',
         'kelas_id' // ← ini harus ada
     ];
 }
