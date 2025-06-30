@@ -12,7 +12,9 @@
                     class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Dashboard</a>
             </li>
             <li>
-                <a href="#" class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Kelola Guru</a>
+                <a href="{{ route('admin.pelajaran') }}"
+                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.pelajaran') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">Mata
+                    Pelajaran</a>
             </li>
             <li>
                 <a href="#" class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Kelola Siswa</a>

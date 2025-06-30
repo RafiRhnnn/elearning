@@ -7,6 +7,7 @@ use App\Http\Middleware\SiswaOnly;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\KelasController;
+use App\Http\Controllers\Admin\PelajaranController;
 use App\Http\Controllers\Admin\RegisterUserController;
 use App\Http\Controllers\Admin\UserManagementController;
 
@@ -57,6 +58,11 @@ Route::middleware(['auth', AdminOnly::class])
         //tambahkelas
         Route::get('/tambah-kelas', [KelasController::class, 'index'])->name('kelas.index');
         Route::post('/tambah-kelas', [KelasController::class, 'store'])->name('kelas.store');
+
+        //pelajaran
+        Route::get('/pelajaran', [PelajaranController::class, 'create'])->name('pelajaran');
+        Route::post('/pelajaran', [PelajaranController::class, 'store'])->name('pelajaran.store');
+
 
 
 
