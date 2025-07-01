@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 use App\Models\Pelajaran; // pastikan model Pelajaran sudah ada
-use App\Models\User;
+
 
 class PelajaranController extends Controller
 {
@@ -51,7 +52,7 @@ class PelajaranController extends Controller
 
     public function create()
     {
-        $kelas = User::select('nama')->distinct()->get(); // ambil kelas yang sudah ada
+        $kelas = Kelas::select('id', 'nama')->distinct()->get();
         return view('admin.pelajaran', compact('kelas'));
     }
 }
