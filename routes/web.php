@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Admin\PelajaranController;
 use App\Http\Controllers\Admin\RegisterUserController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\PelajaranManajementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,8 +64,11 @@ Route::middleware(['auth', AdminOnly::class])
         Route::get('/pelajaran', [PelajaranController::class, 'create'])->name('pelajaran');
         Route::post('/pelajaran', [PelajaranController::class, 'store'])->name('pelajaran.store');
 
-
-
+        //kelola pelajaran
+        Route::get('/kelola-pelajaran', [PelajaranManajementController::class, 'index'])->name('kelola_pelajaran');
+        Route::get('/kelola-pelajaran/{id}/edit', [PelajaranManajementController::class, 'edit'])->name('kelola_pelajaran.edit');
+        Route::put('/kelola-pelajaran/{id}', [PelajaranManajementController::class, 'update'])->name('kelola_pelajaran.update');
+        Route::delete('/kelola-pelajaran/{id}', [PelajaranManajementController::class, 'destroy'])->name('kelola_pelajaran.destroy');
 
         // Kelola User
         Route::get('/kelola-user', [UserManagementController::class, 'index'])->name('kelola_user');
