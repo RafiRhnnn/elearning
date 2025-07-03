@@ -25,7 +25,7 @@
 
 
             <li>
-                <a href="#" class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Kelola Siswa</a>
+                <a href="#" class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Kelola Guru</a>
             </li>
             <li>
                 <a href="{{ route('admin.register') }}"
