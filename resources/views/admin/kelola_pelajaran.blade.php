@@ -8,64 +8,60 @@
 </head>
 
 <body class="flex min-h-screen bg-gray-100">
-    <!-- Sidebar -->
     @include('admin.sidebar')
 
-    <!-- Konten Utama -->
     <main class="flex-1 p-6">
         <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
-            <h2 class="text-2xl font-bold mb-6 text-center">Kelola Mata Pelajaran</h2>
+            <h2 class="text-2xl font-bold mb-4">Kelola Data Pelajaran</h2>
 
             @if (session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+                <div class="mb-4 text-green-600">
                     {{ session('success') }}
                 </div>
             @endif
 
             <div class="overflow-x-auto">
-                <table class="w-full border border-gray-200 text-sm">
-                    <thead class="bg-gray-100 text-gray-700">
+                <table class="w-full table-auto border-collapse border border-gray-300">
+                    <thead class="bg-gray-200">
                         <tr>
-                            <th class="border px-4 py-2 text-left">No</th>
-                            <th class="border px-4 py-2 text-left">Kelas</th>
-                            <th class="border px-4 py-2 text-left">Mata Pelajaran</th>
-                            <th class="border px-4 py-2 text-left">Aksi</th>
+                            <th class="border px-4 py-2">#</th>
+                            <th class="border px-4 py-2">Guru</th>
+                            <th class="border px-4 py-2">Kelas</th>
+                            <th class="border px-4 py-2">Nama Pelajaran</th>
+                            <th class="border px-4 py-2">Hari</th>
+                            <th class="border px-4 py-2">Jam</th>
+                            <th class="border px-4 py-2">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($dataPelajaran as $index => $item)
-                            <tr class="border-t">
-                                <td class="border px-4 py-2">{{ $index + 1 }}</td>
-                                <td class="border px-4 py-2 font-semibold">{{ $item->kelas }}</td>
-                                <td class="border px-4 py-2">
-                                    <ul class="list-disc ml-5">
-                                        @for ($i = 1; $i <= 10; $i++)
-                                            @php $field = 'pelajaran' . $i; @endphp
-                                            @if (!empty($item->$field))
-                                                <li>{{ $item->$field }}</li>
-                                            @endif
-                                        @endfor
-                                    </ul>
-                                </td>
-                                <td class="border px-4 py-2">
-                                    <div class="flex gap-2">
-                                        <a href="{{ route('admin.kelola_pelajaran.edit', $item->id) }}"
-                                            class="text-blue-600 hover:underline">Edit</a>
-                                        <form action="{{ route('admin.kelola_pelajaran.destroy', $item->id) }}"
-                                            method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:underline">Hapus</button>
-                                        </form>
-                                    </div>
+                        @forelse ($dataPelajaran as $index => $p)
+                            <tr class="text-center">
+                                <td class="border px-2 py-1">{{ $index + 1 }}</td>
+                                <td class="border px-2 py-1">{{ $p->guru->name ?? '-' }}</td>
+                                <td class="border px-2 py-1">{{ $p->kelas }}</td>
+                                <td class="border px-2 py-1">{{ $p->nama_pelajaran }}</td>
+                                <td class="border px-2 py-1">{{ $p->hari }}</td>
+                                <td class="border px-2 py-1">{{ $p->jam }}</td>
+                                <td class="border px-2 py-1">
+                                    <a href="{{ route('admin.kelola_pelajaran.edit', $p->id) }}"
+                                        class="text-blue-600 hover:underline">Edit</a>
+                                    |
+                                    <form action="{{ route('admin.kelola_pelajaran.destroy', $p->id) }}" method="POST"
+                                        class="inline"
+                                        onsubmit="return confirm('Yakin ingin menghapus pelajaran ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:underline">Hapus</button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center py-4 text-gray-500">Belum ada data pelajaran.</td>
+                                <td colspan="7" class="text-center py-4">Belum ada data pelajaran.</td>
                             </tr>
                         @endforelse
                     </tbody>
+
                 </table>
             </div>
         </div>

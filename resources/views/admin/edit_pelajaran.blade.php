@@ -8,13 +8,11 @@
 </head>
 
 <body class="flex min-h-screen bg-gray-100">
-    <!-- Sidebar -->
     @include('admin.sidebar')
 
-    <!-- Konten Utama -->
     <main class="flex-1 p-6">
         <div class="max-w-3xl mx-auto bg-white p-8 rounded shadow">
-            <h2 class="text-2xl font-bold mb-6 text-center">Edit Pelajaran untuk Kelas {{ $pelajaran->kelas }}</h2>
+            <h2 class="text-2xl font-bold mb-6 text-center">Edit Pelajaran</h2>
 
             @if ($errors->any())
                 <div class="mb-4 text-red-600">
@@ -30,22 +28,60 @@
                 @csrf
                 @method('PUT')
 
-                <!-- Edit Nama Kelas -->
+                <!-- Pilih Guru -->
                 <div class="mb-4">
-                    <label for="kelas" class="block text-sm font-semibold text-gray-700">Nama Kelas</label>
-                    <input type="text" name="kelas" id="kelas" value="{{ old('kelas', $pelajaran->kelas) }}"
-                        class="w-full mt-1 p-2 border rounded bg-gray-50" required>
+                    <label for="guru_id" class="block text-sm font-semibold text-gray-700">Pilih Guru</label>
+                    <select name="guru_id" id="guru_id" class="w-full p-2 border rounded bg-gray-50" required>
+                        <option value="">-- Pilih Guru --</option>
+                        @foreach ($guru as $g)
+                            <option value="{{ $g->id }}" {{ $pelajaran->guru_id == $g->id ? 'selected' : '' }}>
+                                {{ $g->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
-                <!-- Edit Pelajaran 1–10 -->
+                <!-- Pilih Kelas -->
+                <div class="mb-4">
+                    <label for="kelas" class="block text-sm font-semibold text-gray-700">Pilih Kelas</label>
+                    <select name="kelas" id="kelas" class="w-full p-2 border rounded bg-gray-50" required>
+                        <option value="">-- Pilih Kelas --</option>
+                        @foreach ($kelas as $k)
+                            <option value="{{ $k->nama }}" {{ $pelajaran->kelas == $k->nama ? 'selected' : '' }}>
+                                {{ $k->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Nama Pelajaran -->
+                <div class="mb-4">
+                    <label for="nama_pelajaran" class="block text-sm font-semibold text-gray-700">Nama Pelajaran</label>
+                    <input type="text" name="nama_pelajaran" id="nama_pelajaran"
+                        value="{{ old('nama_pelajaran', $pelajaran->nama_pelajaran) }}"
+                        class="w-full p-2 border rounded bg-gray-50" required>
+                </div>
+
+                <!-- Hari -->
+                <div class="mb-4">
+                    <label for="hari" class="block text-sm font-semibold text-gray-700">Hari</label>
+                    <select name="hari" id="hari" class="w-full p-2 border rounded bg-gray-50" required>
+                        @foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $h)
+                            <option value="{{ $h }}" {{ $pelajaran->hari == $h ? 'selected' : '' }}>
+                                {{ $h }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Jam -->
                 <div class="mb-6">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Mata Pelajaran</label>
-                    @for ($i = 1; $i <= 10; $i++)
-                        @php $field = 'pelajaran' . $i; @endphp
-                        <input type="text" name="{{ $field }}" placeholder="Pelajaran {{ $i }}"
-                            value="{{ old($field, $pelajaran->$field) }}"
-                            class="w-full mb-2 p-2 border rounded bg-gray-50">
-                    @endfor
+                    <label for="jam" class="block text-sm font-semibold text-gray-700">Jam</label>
+                    <select name="jam" id="jam" class="w-full p-2 border rounded bg-gray-50" required>
+                        @foreach (['07:00', '08:00', '09:00', '10:00', '11:00', '13:00', '14:00'] as $j)
+                            <option value="{{ $j }}" {{ $pelajaran->jam == $j ? 'selected' : '' }}>
+                                {{ $j }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <!-- Tombol -->

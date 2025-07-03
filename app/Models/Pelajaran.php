@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Pelajaran extends Model
 {
@@ -10,15 +11,17 @@ class Pelajaran extends Model
 
     protected $fillable = [
         'kelas',
-        'pelajaran1',
-        'pelajaran2',
-        'pelajaran3',
-        'pelajaran4',
-        'pelajaran5',
-        'pelajaran6',
-        'pelajaran7',
-        'pelajaran8',
-        'pelajaran9',
-        'pelajaran10',
+        'guru_id',
+        'nama_pelajaran',
+        'hari',
+        'jam',
     ];
+
+    /**
+     * Relasi ke model User (guru)
+     */
+    public function guru()
+    {
+        return $this->belongsTo(User::class, 'guru_id');
+    }
 }
