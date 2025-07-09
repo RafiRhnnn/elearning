@@ -10,7 +10,7 @@
     @include('guru.sidebar')
 
     <main class="flex-1 p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Selamat Datang, Guru</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Selamat Datang, {{ Auth::user()->name }}</h2>
         <p class="text-gray-600">Ini adalah halaman dashboard untuk guru. Silakan pilih menu di sidebar untuk mulai
             mengelola materi atau tugas.</p>
     </main>

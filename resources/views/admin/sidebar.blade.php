@@ -22,8 +22,6 @@
                     Kelola Pelajaran
                 </a>
             </li>
-
-
             <li>
                 <a href="#" class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Kelola Guru</a>
             </li>
@@ -38,6 +36,9 @@
                     class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.kelola_user') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">
                     Kelola User
                 </a>
+            </li>
+            <li>
+                <a href="#" class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Kelola Siswa</a>
             </li>
 
             <li>
