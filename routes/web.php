@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PelajaranController;
 use App\Http\Controllers\Admin\RegisterUserController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\PelajaranManajementController;
+use App\Http\Controllers\Guru\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,7 +87,7 @@ Route::middleware(['auth', GuruOnly::class])
     ->prefix('guru')
     ->name('guru.')
     ->group(function () {
-        Route::get('/dashboard', fn() => view('guru.dashboard'))->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
 
 /*

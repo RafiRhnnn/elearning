@@ -1,7 +1,7 @@
 <aside class="w-64 bg-white shadow-md hidden sm:block">
     <div class="p-6 border-b border-gray-200">
         <img src="{{ asset('img/logo.png') }}" alt="Logo UTB" class="h-10 mx-auto mb-2">
-        <h1 class="text-xl font-bold text-center text-green-700">Selamat datang Guru, {{ Auth::user()->name }}</h1>
+        <h1 class="text-xl font-bold text-center text-green-700">Selamat datang Guru {{ Auth::user()->name }}</h1>
     </div>
     <nav class="p-4">
         <ul class="space-y-2">
