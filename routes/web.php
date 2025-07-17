@@ -6,12 +6,14 @@ use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\SiswaOnly;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Guru\TugasController;
 use App\Http\Controllers\Admin\KelasController;
+use App\Http\Controllers\Guru\MateriController;
+use App\Http\Controllers\Guru\DashboardController;
 use App\Http\Controllers\Admin\PelajaranController;
 use App\Http\Controllers\Admin\RegisterUserController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\PelajaranManajementController;
-use App\Http\Controllers\Guru\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,7 +90,15 @@ Route::middleware(['auth', GuruOnly::class])
     ->name('guru.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/kelas/{kelas}', [DashboardController::class, 'detailKelas'])->name('kelas.detail');
+
+        // Halaman Materi & Tugas
+        Route::get('/kelas/{kelas}/materi', [MateriController::class, 'index'])->name('materi.index');
+        Route::get('/kelas/{kelas}/tugas', [TugasController::class, 'index'])->name('tugas.index');
+        Route::post('/kelas/materi/store', [MateriController::class, 'store'])->name('materi.store');
+        Route::post('/kelas/tugas/store', [MateriController::class, 'store'])->name('tugas.store');
     });
+
 
 /*
 |--------------------------------------------------------------------------

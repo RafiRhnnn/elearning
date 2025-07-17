@@ -14,22 +14,30 @@
         <p class="text-gray-600 mb-6">Ini adalah halaman dashboard untuk guru. Silakan pilih menu di sidebar untuk mulai
             mengelola materi atau tugas.</p>
 
-        <div class="bg-white p-4 rounded shadow">
-            <h3 class="text-lg font-semibold mb-3 text-green-700">Kelas & Pelajaran yang Anda Ajar:</h3>
+        <h3 class="text-xl font-semibold text-green-700 mb-4">Kelas & Pelajaran yang Anda Ajar:</h3>
 
-            @forelse ($kelas as $namaKelas => $items)
-                <div class="mb-4">
-                    <p class="font-medium text-gray-800">{{ $namaKelas }}</p>
-                    <ul class="ml-5 list-disc text-sm text-gray-700">
-                        @foreach ($items as $p)
-                            <li>{{ $p->nama_pelajaran }} ({{ $p->hari }} - {{ $p->jam }})</li>
-                        @endforeach
-                    </ul>
+        @forelse ($kelas as $namaKelas => $items)
+            <div class="bg-white p-4 rounded-lg shadow mb-5">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h4 class="text-lg font-bold text-gray-800">{{ $namaKelas }}</h4>
+                        <ul class="mt-2 list-disc list-inside text-sm text-gray-700">
+                            @foreach ($items as $p)
+                                <li>{{ $p->nama_pelajaran }} ({{ $p->hari }} - {{ $p->jam }})</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div>
+                        <a href="{{ route('guru.kelas.detail', $namaKelas) }}"
+                            class="bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700 transition">
+                            Detail
+                        </a>
+                    </div>
                 </div>
-            @empty
-                <p class="text-gray-600">Belum ada jadwal mengajar yang ditentukan oleh admin.</p>
-            @endforelse
-        </div>
+            </div>
+        @empty
+            <p class="text-gray-600">Belum ada jadwal mengajar yang ditentukan oleh admin.</p>
+        @endforelse
     </main>
 </body>
 

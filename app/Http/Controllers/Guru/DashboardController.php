@@ -18,4 +18,14 @@ class DashboardController extends Controller
 
         return view('guru.dashboard', compact('kelas'));
     }
+
+    public function detailKelas($kelas)
+    {
+        $guruId = Auth::id();
+        $pelajaran = Pelajaran::where('guru_id', $guruId)
+            ->where('kelas', $kelas)
+            ->get();
+
+        return view('guru.kelas_detail', compact('kelas', 'pelajaran'));
+    }
 }
