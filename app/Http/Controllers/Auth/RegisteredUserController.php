@@ -43,6 +43,6 @@ class RegisteredUserController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect('/dashboard')->with('success', 'User berhasil ditambahkan');
+        return redirect('login')->with('success', 'User berhasil ditambahkan');
     }
 }

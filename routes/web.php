@@ -22,12 +22,12 @@ use App\Http\Controllers\Admin\PelajaranManajementController;
 */
 
 // Arahkan root ke halaman login
-Route::get('/', fn() => redirect()->route('login'));
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
 
 // Default dashboard (jika tidak pakai redirect berdasarkan role)
-Route::get('/dashboard', fn() => view('dashboard'))
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+
 
 // Profile (semua role bisa akses)
 Route::middleware('auth')->group(function () {
