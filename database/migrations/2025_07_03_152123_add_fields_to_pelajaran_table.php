@@ -10,18 +10,18 @@ return new class extends Migration
     {
         Schema::table('pelajaran', function (Blueprint $table) {
             // Hapus kolom lama yang tidak diperlukan
-            $table->dropColumn([
-                'pelajaran1',
-                'pelajaran2',
-                'pelajaran3',
-                'pelajaran4',
-                'pelajaran5',
-                'pelajaran6',
-                'pelajaran7',
-                'pelajaran8',
-                'pelajaran9',
-                'pelajaran10',
-            ]);
+            // $table->dropColumn([
+            //     'pelajaran1',
+            //     'pelajaran2',
+            //     'pelajaran3',
+            //     'pelajaran4',
+            //     'pelajaran5',
+            //     'pelajaran6',
+            //     'pelajaran7',
+            //     'pelajaran8',
+            //     'pelajaran9',
+            //     'pelajaran10',
+            // ]);
 
             // Tambah kolom baru jika belum ada
             if (!Schema::hasColumn('pelajaran', 'guru_id')) {
