@@ -14,4 +14,6 @@ class Materi extends Model
     {
         return $this->belongsTo(User::class, 'guru_id');
     }
+
+    // Pastikan tidak ada observer atau logic otomatis di sini.
 }

@@ -34,7 +34,7 @@
                     @csrf
                     <input type="hidden" name="kelas" value="{{ $kelas }}">
                     <input type="hidden" name="guru_id" value="{{ Auth::id() }}">
-                   
+
 
                     <div class="mb-3">
                         <label class="block text-gray-700">Nama Guru</label>
@@ -55,8 +55,7 @@
                     </div>
 
                     <div class="flex justify-end space-x-2">
-                        <button type="button"
-                            onclick="document.getElementById('modalTambah').classList.add('hidden')"
+                        <button type="button" onclick="document.getElementById('modalTambah').classList.add('hidden')"
                             class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Batal</button>
                         <button type="submit"
                             class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Simpan</button>

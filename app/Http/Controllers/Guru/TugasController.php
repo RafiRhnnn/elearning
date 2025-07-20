@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Models\Tugas;
+use App\Models\Materi; // Tambahkan import untuk model Materi
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-
 
 class TugasController extends Controller
 {
@@ -31,6 +31,7 @@ class TugasController extends Controller
 
         $filePath = $request->file('file')->store('tugas', 'public');
 
+        // Simpan data ke tabel tugas
         Tugas::create([
             'guru_id' => $request->guru_id,
             'kelas' => $request->kelas,

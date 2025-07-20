@@ -96,9 +96,10 @@ Route::middleware(['auth', GuruOnly::class])
         Route::get('/kelas/{kelas}/materi', [MateriController::class, 'index'])->name('materi.index');
         Route::get('/kelas/{kelas}/tugas', [TugasController::class, 'index'])->name('tugas.index');
         Route::post('/kelas/materi/store', [MateriController::class, 'store'])->name('materi.store');
-        Route::post('/kelas/tugas/store', [MateriController::class, 'store'])->name('tugas.store');
+        Route::post('/kelas/tugas/store', [TugasController::class, 'store'])->name('tugas.store');
     });
 
+Route::post('/guru/tugas/store', [App\Http\Controllers\Guru\TugasController::class, 'store'])->name('guru.tugas.store');
 
 /*
 |--------------------------------------------------------------------------
