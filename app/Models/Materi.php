@@ -8,7 +8,7 @@ class Materi extends Model
 {
     protected $table = 'materi'; // ← Wajib ditambah jika nama tabel tidak jamak
 
-    protected $fillable = ['guru_id', 'kelas', 'file'];
+    protected $fillable = ['guru_id', 'kelas', 'pertemuan', 'file'];
 
     public function guru()
     {
@@ -17,3 +17,5 @@ class Materi extends Model
 
     // Pastikan tidak ada observer atau logic otomatis di sini.
 }
+
+// DESCRIBE materi;

@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\PelajaranController;
 use App\Http\Controllers\Admin\RegisterUserController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\PelajaranManajementController;
+use App\Http\Controllers\Guru\MateriController as GuruMateriController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +101,7 @@ Route::middleware(['auth', GuruOnly::class])
     });
 
 Route::post('/guru/tugas/store', [App\Http\Controllers\Guru\TugasController::class, 'store'])->name('guru.tugas.store');
+Route::delete('/guru/materi/{id}', [GuruMateriController::class, 'destroy'])->name('guru.materi.destroy');
 
 /*
 |--------------------------------------------------------------------------
