@@ -27,7 +27,8 @@
         </div>
 
         <!-- Modal Form Tambah Materi -->
-        <div id="modalTambah" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div id="modalTambah" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+            style="display: none;">
             <div class="bg-white rounded-lg shadow-lg p-4 w-[320px] sm:w-[360px]">
                 <h3 class="text-lg font-bold mb-3">Tambah Materi</h3>
                 <form action="{{ route('guru.materi.store') }}" method="POST" enctype="multipart/form-data">
@@ -117,11 +118,11 @@
     <!-- JS Modal -->
     <script>
         function showModal() {
-            document.getElementById('modalTambah').classList.remove('hidden');
+            document.getElementById('modalTambah').style.display = 'flex';
         }
 
         function hideModal() {
-            document.getElementById('modalTambah').classList.add('hidden');
+            document.getElementById('modalTambah').style.display = 'none';
         }
     </script>
 </body>
