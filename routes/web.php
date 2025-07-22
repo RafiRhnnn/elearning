@@ -114,7 +114,9 @@ Route::middleware(['auth', SiswaOnly::class])
     ->prefix('siswa')
     ->name('siswa.')
     ->group(function () {
-        Route::get('/dashboard', fn() => view('siswa.dashboard'))->name('dashboard');
+        Route::get('/dashboard', [App\Http\Controllers\Siswa\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/materi', [App\Http\Controllers\Siswa\MateriController::class, 'index'])->name('materi');
+        Route::get('/tugas', [App\Http\Controllers\Siswa\TugasController::class, 'index'])->name('tugas');
     });
 
 // Route bawaan Laravel Breeze (login, logout, dll)

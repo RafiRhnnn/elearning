@@ -5,16 +5,24 @@ namespace App\Http\Controllers\Guru;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Materi;
+use App\Models\Pelajaran;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage; // Import Storage facade
+use Illuminate\Support\Facades\Storage;
 
 class MateriController extends Controller
 {
     public function index($kelas)
     {
-        $materiList = Materi::where('kelas', $kelas)->where('guru_id', Auth::id())->get();
+        // Ambil mata pelajaran yang diajar guru di kelas ini
+        $pelajaranList = Pelajaran::where('guru_id', Auth::id())
+            ->where('kelas', $kelas)
+            ->get();
 
-        return view('guru.materi', compact('kelas', 'materiList'));
+        $materiList = Materi::where('kelas', $kelas)
+            ->where('guru_id', Auth::id())
+            ->get();
+
+        return view('guru.materi', compact('kelas', 'materiList', 'pelajaranList'));
     }
 
     public function store(Request $request)
@@ -22,16 +30,18 @@ class MateriController extends Controller
         $request->validate([
             'guru_id' => 'required|exists:users,id',
             'kelas' => 'required|string',
-            'pertemuan' => 'required|string|max:255', // Validate pertemuan
+            'mata_pelajaran' => 'required|string',
+            'pertemuan' => 'required|string|max:255',
             'file' => 'required|file|mimes:pdf,doc,docx,png,jpg,jpeg|max:2048',
         ]);
 
         $path = $request->file('file')->store('materi', 'public');
 
-        \App\Models\Materi::create([
+        Materi::create([
             'guru_id' => $request->guru_id,
             'kelas' => $request->kelas,
-            'pertemuan' => $request->pertemuan, // Save pertemuan
+            'mata_pelajaran' => $request->mata_pelajaran,
+            'pertemuan' => $request->pertemuan,
             'file' => $path,
         ]);
 

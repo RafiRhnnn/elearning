@@ -49,6 +49,21 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="block text-gray-700 text-sm">Mata Pelajaran</label>
+                        <select name="mata_pelajaran" required class="w-full border rounded px-3 py-2 text-sm">
+                            <option value="">Pilih Mata Pelajaran</option>
+                            @if (isset($pelajaranList) && $pelajaranList->count() > 0)
+                                @foreach ($pelajaranList as $pelajaran)
+                                    <option value="{{ $pelajaran->nama_pelajaran }}">{{ $pelajaran->nama_pelajaran }}
+                                    </option>
+                                @endforeach
+                            @else
+                                <option value="Umum">Umum</option>
+                            @endif
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="block text-gray-700 text-sm">Pertemuan</label>
                         <input type="text" name="pertemuan" required class="w-full border rounded px-3 py-2 text-sm">
                     </div>
@@ -78,6 +93,7 @@
                         <th class="border px-4 py-2">No</th>
                         <th class="border px-4 py-2">Nama Guru</th>
                         <th class="border px-4 py-2">Kelas</th>
+                        <th class="border px-4 py-2">Mata Pelajaran</th>
                         <th class="border px-4 py-2">Pertemuan</th>
                         <th class="border px-4 py-2">File</th>
                         <th class="border px-4 py-2">Aksi</th>
@@ -89,6 +105,7 @@
                             <td class="border px-4 py-2">{{ $index + 1 }}</td>
                             <td class="border px-4 py-2">{{ $materi->guru->name }}</td>
                             <td class="border px-4 py-2">{{ $materi->kelas }}</td>
+                            <td class="border px-4 py-2">{{ $materi->mata_pelajaran ?? 'Umum' }}</td>
                             <td class="border px-4 py-2">{{ $materi->pertemuan }}</td>
                             <td class="border px-4 py-2">
                                 <a href="{{ asset('storage/' . $materi->file) }}" target="_blank"
@@ -107,7 +124,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center py-4 text-gray-500">Belum ada materi.</td>
+                            <td colspan="7" class="text-center py-4 text-gray-500">Belum ada materi.</td>
                         </tr>
                     @endforelse
                 </tbody>

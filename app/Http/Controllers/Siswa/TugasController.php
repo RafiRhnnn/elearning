@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Kelas;
 
-class DashboardController extends Controller
+class TugasController extends Controller
 {
     public function index()
     {
@@ -23,6 +23,6 @@ class DashboardController extends Controller
             $kelas = $kelasDitemukan;
         }
 
-        return view('siswa.dashboard', compact('user', 'kelas'));
+        return view('siswa.tugas', compact('user', 'kelas'));
     }
 }

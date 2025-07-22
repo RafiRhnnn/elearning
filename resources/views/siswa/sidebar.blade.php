@@ -14,12 +14,14 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="text-gray-700 block py-2 px-4 rounded hover:bg-green-100">
+                <a href="{{ route('siswa.materi') }}"
+                    class="{{ request()->routeIs('siswa.materi') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }} block py-2 px-4 rounded hover:bg-green-100">
                     Materi
                 </a>
             </li>
             <li>
-                <a href="#" class="text-gray-700 block py-2 px-4 rounded hover:bg-green-100">
+                <a href="{{ route('siswa.tugas') }}"
+                    class="{{ request()->routeIs('siswa.tugas') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }} block py-2 px-4 rounded hover:bg-green-100">
                     Tugas
                 </a>
             </li>

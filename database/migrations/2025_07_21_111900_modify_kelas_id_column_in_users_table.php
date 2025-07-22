@@ -6,23 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
+        // Jangan ubah tipe data kelas_id, biarkan tetap string
         Schema::table('users', function (Blueprint $table) {
-            // Drop the foreign key constraint first
-            $table->dropForeign('users_kelas_id_foreign');
-            // Modify the column type
-            $table->string('kelas_id', 100)->nullable()->change();
+            // Hanya pastikan kolom kelas_id ada dan nullable
+            if (!Schema::hasColumn('users', 'kelas_id')) {
+                $table->string('kelas_id')->nullable();
+            }
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Change back to integer
-            $table->unsignedBigInteger('kelas_id')->nullable()->change();
-            // Recreate the foreign key constraint
-            $table->foreign('kelas_id')->references('id')->on('kelas');
+            // Rollback jika diperlukan
         });
     }
 };
