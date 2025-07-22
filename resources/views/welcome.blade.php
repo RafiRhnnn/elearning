@@ -7,48 +7,15 @@
     <title>E-Learning Platform - SMA Negeri</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .hero-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-        .card-hover:hover {
-            transform: translateY(-5px);
-            transition: all 0.3s ease;
-        }
-
-        .typing-effect {
-            border-right: 2px solid;
-            animation: typing 3.5s steps(30, end), blink-caret 0.75s step-end infinite;
-        }
-
-        @keyframes typing {
-            from {
-                width: 0
-            }
-
-            to {
-                width: 100%
-            }
-        }
-
-        @keyframes blink-caret {
-
-            from,
-            to {
-                border-color: transparent
-            }
-
-            50% {
-                border-color: orange;
-            }
-        }
-    </style>
+    <!-- Custom CSS -->
+    <link href="{{ asset('css/welcome.css') }}" rel="stylesheet">
 </head>
 
 <body class="bg-gray-50 text-gray-800">
     <!-- Navigation -->
-    <nav class="bg-white shadow-lg fixed w-full z-50">
+    <nav class="bg-white shadow-lg fixed w-full z-50 navbar-slide">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-3">
@@ -93,24 +60,42 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-gradient pt-24 pb-16 text-white">
-        <div class="container mx-auto px-4 text-center">
+    <section class="hero-gradient pt-24 pb-16 text-white relative overflow-hidden">
+        <!-- Floating Elements Background -->
+        <div class="absolute inset-0">
+            <div class="absolute top-20 left-10 floating">
+                <i class="fas fa-book text-white text-4xl opacity-20"></i>
+            </div>
+            <div class="absolute top-40 right-20 floating" style="animation-delay: 0.5s;">
+                <i class="fas fa-graduation-cap text-white text-5xl opacity-20"></i>
+            </div>
+            <div class="absolute bottom-20 left-20 floating" style="animation-delay: 1s;">
+                <i class="fas fa-laptop text-white text-3xl opacity-20"></i>
+            </div>
+            <div class="absolute top-60 left-1/2 floating" style="animation-delay: 1.5s;">
+                <i class="fas fa-pencil-alt text-white text-4xl opacity-20"></i>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-4 text-center relative z-10">
             <div class="max-w-4xl mx-auto">
-                <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-24 w-24 mx-auto mb-6">
-                <h1 class="text-5xl font-bold mb-6">
+                <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-24 w-24 mx-auto mb-6 bounce-in">
+                <h1 class="text-5xl font-bold mb-6 fade-in-up">
                     Selamat Datang di <br>
-                    <span class="text-yellow-300">E-Learning SMA Negeri</span>
+                    <span class="text-yellow-300 wave-animation inline-block">E-Learning SMA Negeri</span>
                 </h1>
-                <p class="text-xl mb-8 typing-effect overflow-hidden whitespace-nowrap w-fit mx-auto">
-                    Platform pembelajaran digital untuk generasi masa depan
-                </p>
-                <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <div class="mb-8">
+                    <p class="text-xl typing-effect mx-auto" style="width: fit-content;">
+                        Platform pembelajaran digital untuk generasi masa depan
+                    </p>
+                </div>
+                <div class="flex flex-col md:flex-row gap-4 justify-center fade-in-up" style="animation-delay: 2s;">
                     <a href="{{ route('register') }}"
-                        class="bg-yellow-500 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-400 transition duration-300 transform hover:scale-105">
-                        <i class="fas fa-rocket mr-2"></i>Mulai Belajar Sekarang
+                        class="bg-yellow-500 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-400 transition duration-300 transform hover:scale-105 hover:shadow-2xl">
+                        <i class="fas fa-rocket mr-2 pulse-icon"></i>Mulai Belajar Sekarang
                     </a>
                     <a href="#features"
-                        class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition duration-300">
+                        class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition duration-300 transform hover:scale-105">
                         <i class="fas fa-info-circle mr-2"></i>Pelajari Lebih Lanjut
                     </a>
                 </div>
@@ -122,31 +107,31 @@
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-                <div class="p-6">
-                    <div class="text-4xl font-bold text-green-600 mb-2">
-                        <i class="fas fa-users text-5xl mb-4"></i>
-                        <div>500+</div>
+                <div class="p-6" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="text-4xl font-bold text-green-600 mb-2 statistics-counter">
+                        <i class="fas fa-users text-5xl mb-4 pulse-icon"></i>
+                        <div class="counter" data-target="500">0</div>+
                     </div>
                     <p class="text-gray-600">Siswa Aktif</p>
                 </div>
-                <div class="p-6">
-                    <div class="text-4xl font-bold text-blue-600 mb-2">
-                        <i class="fas fa-chalkboard-teacher text-5xl mb-4"></i>
-                        <div>25+</div>
+                <div class="p-6" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="text-4xl font-bold text-blue-600 mb-2 statistics-counter">
+                        <i class="fas fa-chalkboard-teacher text-5xl mb-4 pulse-icon"></i>
+                        <div class="counter" data-target="25">0</div>+
                     </div>
                     <p class="text-gray-600">Guru Berpengalaman</p>
                 </div>
-                <div class="p-6">
-                    <div class="text-4xl font-bold text-purple-600 mb-2">
-                        <i class="fas fa-book text-5xl mb-4"></i>
-                        <div>15+</div>
+                <div class="p-6" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="text-4xl font-bold text-purple-600 mb-2 statistics-counter">
+                        <i class="fas fa-book text-5xl mb-4 pulse-icon"></i>
+                        <div class="counter" data-target="15">0</div>+
                     </div>
                     <p class="text-gray-600">Mata Pelajaran</p>
                 </div>
-                <div class="p-6">
-                    <div class="text-4xl font-bold text-orange-600 mb-2">
-                        <i class="fas fa-certificate text-5xl mb-4"></i>
-                        <div>98%</div>
+                <div class="p-6" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="text-4xl font-bold text-orange-600 mb-2 statistics-counter">
+                        <i class="fas fa-certificate text-5xl mb-4 pulse-icon"></i>
+                        <div class="counter" data-target="98">0</div>%
                     </div>
                     <p class="text-gray-600">Tingkat Kelulusan</p>
                 </div>
@@ -157,7 +142,7 @@
     <!-- Features Section -->
     <section id="features" class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12" data-aos="fade-up">
                 <h2 class="text-4xl font-bold text-gray-800 mb-4">Fitur Unggulan</h2>
                 <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                     Platform e-learning yang dirancang khusus untuk mendukung proses pembelajaran modern di SMA
@@ -165,8 +150,8 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
-                    <div class="text-green-600 text-5xl mb-6">
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover" data-aos="flip-left" data-aos-delay="100">
+                    <div class="text-green-600 text-5xl mb-6 pulse-icon">
                         <i class="fas fa-laptop-code"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-4 text-gray-800">Pembelajaran Interaktif</h3>
@@ -181,8 +166,8 @@
                     </ul>
                 </div>
 
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
-                    <div class="text-blue-600 text-5xl mb-6">
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover" data-aos="flip-left" data-aos-delay="200">
+                    <div class="text-blue-600 text-5xl mb-6 pulse-icon">
                         <i class="fas fa-tasks"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-4 text-gray-800">Manajemen Tugas</h3>
@@ -197,8 +182,8 @@
                     </ul>
                 </div>
 
-                <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
-                    <div class="text-purple-600 text-5xl mb-6">
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover" data-aos="flip-left" data-aos-delay="300">
+                    <div class="text-purple-600 text-5xl mb-6 pulse-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-4 text-gray-800">Monitoring Progress</h3>
@@ -220,11 +205,11 @@
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
+                <div data-aos="slide-right" data-aos-duration="1000">
                     <img src="{{ asset('img/logo.png') }}" alt="SMA Campus"
-                        class="h-96 w-full object-cover rounded-lg shadow-lg">
+                        class="h-96 w-full object-cover rounded-lg shadow-lg transform hover:scale-105 transition duration-500">
                 </div>
-                <div>
+                <div data-aos="slide-left" data-aos-duration="1000">
                     <h2 class="text-4xl font-bold text-gray-800 mb-6">Tentang SMA Negeri</h2>
                     <p class="text-lg text-gray-600 mb-6">
                         SMA Negeri adalah salah satu sekolah menengah atas terbaik yang berkomitmen
@@ -256,8 +241,8 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-16 bg-gradient-to-r from-green-600 to-blue-600 text-white">
-        <div class="container mx-auto px-4 text-center">
+    <section class="py-16 bg-gradient-to-r from-green-600 to-blue-600 text-white parallax-bg">
+        <div class="container mx-auto px-4 text-center" data-aos="zoom-in" data-aos-duration="1000">
             <h2 class="text-4xl font-bold mb-6">Siap Memulai Perjalanan Belajar Anda?</h2>
             <p class="text-xl mb-8 max-w-2xl mx-auto">
                 Bergabunglah dengan ratusan siswa yang telah merasakan pengalaman belajar yang lebih baik dengan
@@ -271,7 +256,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
+    <footer class="bg-gray-800 text-white py-12" data-aos="fade-up">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="col-span-1 md:col-span-2">
@@ -335,17 +320,10 @@
         </div>
     </footer>
 
-    <!-- Smooth Scroll Script -->
-    <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="{{ asset('js/welcome.js') }}"></script>
 </body>
 
 </html>
