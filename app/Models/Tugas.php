@@ -11,7 +11,7 @@ class Tugas extends Model
 
     protected $table = 'tugas';
 
-    protected $fillable = ['guru_id', 'kelas', 'file'];
+    protected $fillable = ['guru_id', 'kelas', 'pertemuan', 'file'];
 
     public function guru()
     {

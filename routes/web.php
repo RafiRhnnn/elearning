@@ -98,10 +98,12 @@ Route::middleware(['auth', GuruOnly::class])
         Route::get('/kelas/{kelas}/tugas', [TugasController::class, 'index'])->name('tugas.index');
         Route::post('/kelas/materi/store', [MateriController::class, 'store'])->name('materi.store');
         Route::post('/kelas/tugas/store', [TugasController::class, 'store'])->name('tugas.store');
+        Route::delete('/tugas/{id}', [TugasController::class, 'destroy'])->name('tugas.destroy');
     });
 
 Route::post('/guru/tugas/store', [App\Http\Controllers\Guru\TugasController::class, 'store'])->name('guru.tugas.store');
 Route::delete('/guru/materi/{id}', [GuruMateriController::class, 'destroy'])->name('guru.materi.destroy');
+
 
 /*
 |--------------------------------------------------------------------------
