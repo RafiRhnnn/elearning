@@ -18,20 +18,11 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="text-gray-700 block py-2 px-4 rounded hover:bg-green-100">
-                    Tugas
+                <a href="{{ route('guru.pengumpulan.index') }}"
+                    class="{{ request()->routeIs('guru.pengumpulan.*') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }} block py-2 px-4 rounded hover:bg-green-100">
+                    📋 Pengumpulan Tugas
                 </a>
             </li>
-
-            <li>
-                <a href="#" class="text-gray-700 block py-2 px-4 rounded hover:bg-green-100">
-                    Tugas
-                </a>
-
-
-            </li>
-
-
             <a href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                 class="block py-2 px-4 rounded text-red-600 hover:bg-red-100">

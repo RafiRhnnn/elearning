@@ -99,6 +99,10 @@ Route::middleware(['auth', GuruOnly::class])
         Route::post('/kelas/materi/store', [MateriController::class, 'store'])->name('materi.store');
         Route::post('/kelas/tugas/store', [TugasController::class, 'store'])->name('tugas.store');
         Route::delete('/tugas/{id}', [TugasController::class, 'destroy'])->name('tugas.destroy');
+
+        // Pengumpulan Tugas
+        Route::get('/pengumpulan-tugas', [App\Http\Controllers\Guru\PengumpulanTugasController::class, 'index'])->name('pengumpulan.index');
+        Route::get('/pengumpulan-tugas/{tugas}', [App\Http\Controllers\Guru\PengumpulanTugasController::class, 'detail'])->name('pengumpulan.detail');
     });
 
 Route::post('/guru/tugas/store', [App\Http\Controllers\Guru\TugasController::class, 'store'])->name('guru.tugas.store');
@@ -117,6 +121,7 @@ Route::middleware(['auth', SiswaOnly::class])
         Route::get('/dashboard', [App\Http\Controllers\Siswa\DashboardController::class, 'index'])->name('dashboard');
         Route::get('/materi', [App\Http\Controllers\Siswa\MateriController::class, 'index'])->name('materi');
         Route::get('/tugas', [App\Http\Controllers\Siswa\TugasController::class, 'index'])->name('tugas');
+        Route::post('/tugas/kumpul', [App\Http\Controllers\Siswa\TugasController::class, 'store'])->name('tugas.store');
     });
 
 // Route bawaan Laravel Breeze (login, logout, dll)
