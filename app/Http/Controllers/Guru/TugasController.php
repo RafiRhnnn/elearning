@@ -32,6 +32,7 @@ class TugasController extends Controller
             'kelas'     => 'required|string',
             'mata_pelajaran' => 'required|string',
             'pertemuan' => 'required|string|max:255',
+            'deadline'  => 'required|date|after:now',
             'file'      => 'required|file|mimes:pdf,doc,docx,png,jpg,jpeg|max:2048',
         ]);
 
@@ -42,6 +43,7 @@ class TugasController extends Controller
             'kelas'     => $request->kelas,
             'mata_pelajaran' => $request->mata_pelajaran,
             'pertemuan' => $request->pertemuan,
+            'deadline'  => $request->deadline,
             'file'      => $path,
         ]);
 

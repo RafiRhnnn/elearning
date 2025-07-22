@@ -39,12 +39,21 @@
                                 <th class="border px-4 py-2">Mata Pelajaran</th>
                                 <th class="border px-4 py-2">Pertemuan</th>
                                 <th class="border px-4 py-2">File Tugas</th>
-                                <th class="border px-4 py-2">Tanggal Upload</th>
+                                <th class="border px-4 py-2">Deadline</th>
+                                <th class="border px-4 py-2">Status</th>
                                 <th class="border px-4 py-2">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($tugasList as $index => $tugas)
+                                @php
+                                    $isLate = $tugas->deadline < now();
+                                    $isSubmitted = $tugas->pengumpulan->count() > 0;
+                                    $submissionTime = $isSubmitted
+                                        ? $tugas->pengumpulan->first()->dikumpulkan_pada
+                                        : null;
+                                    $isLateSubmission = $isSubmitted && $submissionTime > $tugas->deadline;
+                                @endphp
                                 <tr class="text-center">
                                     <td class="border px-4 py-2">{{ $index + 1 }}</td>
                                     <td class="border px-4 py-2">{{ $tugas->guru->name }}</td>
@@ -56,18 +65,41 @@
                                             📄 {{ basename($tugas->file) }}
                                         </a>
                                     </td>
-                                    <td class="border px-4 py-2">{{ $tugas->created_at->format('d/m/Y H:i') }}</td>
                                     <td class="border px-4 py-2">
-                                        @if ($tugas->pengumpulan->count() > 0)
-                                            <span class="text-green-600 font-semibold">✓ Sudah Dikumpulkan</span>
+                                        <span
+                                            class="text-sm {{ $isLate ? 'text-red-600 font-semibold' : 'text-gray-600' }}">
+                                            {{ $tugas->deadline->format('d/m/Y H:i') }}
+                                        </span>
+                                        @if ($isLate && !$isSubmitted)
+                                            <br><small class="text-red-500 font-semibold">⚠️ Terlambat</small>
+                                        @endif
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                        @if ($isSubmitted)
+                                            @if ($isLateSubmission)
+                                                <span class="text-orange-600 font-semibold">📤 Terlambat</span>
+                                            @else
+                                                <span class="text-green-600 font-semibold">✓ Tepat Waktu</span>
+                                            @endif
                                             <br>
                                             <small
-                                                class="text-gray-500">{{ $tugas->pengumpulan->first()->dikumpulkan_pada->format('d/m/Y H:i') }}</small>
+                                                class="text-gray-500">{{ $submissionTime->format('d/m/Y H:i') }}</small>
+                                        @else
+                                            @if ($isLate)
+                                                <span class="text-red-600 font-semibold">❌ Tidak Dikumpulkan</span>
+                                            @else
+                                                <span class="text-blue-600">⏳ Belum Dikumpulkan</span>
+                                            @endif
+                                        @endif
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                        @if ($isSubmitted)
+                                            <span class="text-gray-500 text-sm">Sudah dikumpulkan</span>
                                         @else
                                             <button
-                                                onclick="showKumpulModal({{ $tugas->id }}, '{{ $tugas->mata_pelajaran ?? 'Umum' }}', '{{ $tugas->pertemuan }}')"
-                                                class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
-                                                Kumpulkan
+                                                onclick="showKumpulModal({{ $tugas->id }}, '{{ $tugas->mata_pelajaran ?? 'Umum' }}', '{{ $tugas->pertemuan }}', '{{ $tugas->deadline->format('d/m/Y H:i') }}', {{ $isLate ? 'true' : 'false' }})"
+                                                class="{{ $isLate ? 'bg-orange-600 hover:bg-orange-700' : 'bg-blue-600 hover:bg-blue-700' }} text-white px-3 py-1 rounded text-sm">
+                                                {{ $isLate ? 'Kumpul Terlambat' : 'Kumpulkan' }}
                                             </button>
                                         @endif
                                     </td>
@@ -119,6 +151,19 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="block text-gray-700 text-sm">Deadline</label>
+                        <input type="text" id="deadline_display" disabled
+                            class="w-full border rounded px-3 py-2 bg-gray-100 text-sm">
+                    </div>
+
+                    <div class="mb-3" id="late_warning" style="display: none;">
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                            ⚠️ <strong>Peringatan:</strong> Deadline sudah terlewat. Pengumpulan ini akan dianggap
+                            terlambat.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="block text-gray-700 text-sm">Keterangan *</label>
                         <textarea name="keterangan" required rows="3" placeholder="Tulis keterangan pengumpulan tugas..."
                             class="w-full border rounded px-3 py-2 text-sm"></textarea>
@@ -144,10 +189,19 @@
     </main>
 
     <script>
-        function showKumpulModal(tugasId, mataPelajaran, pertemuan) {
+        function showKumpulModal(tugasId, mataPelajaran, pertemuan, deadline, isLate) {
             document.getElementById('tugas_id').value = tugasId;
             document.getElementById('mata_pelajaran_display').value = mataPelajaran;
             document.getElementById('pertemuan_display').value = pertemuan;
+            document.getElementById('deadline_display').value = deadline;
+
+            // Show late warning if deadline has passed
+            if (isLate) {
+                document.getElementById('late_warning').style.display = 'block';
+            } else {
+                document.getElementById('late_warning').style.display = 'none';
+            }
+
             document.getElementById('modalKumpul').style.display = 'flex';
         }
 

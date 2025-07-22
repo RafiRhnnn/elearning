@@ -48,6 +48,7 @@
                                     <th class="border px-4 py-2">Kelas</th>
                                     <th class="border px-4 py-2">Mata Pelajaran</th>
                                     <th class="border px-4 py-2">Pertemuan</th>
+                                    <th class="border px-4 py-2">Deadline</th>
                                     <th class="border px-4 py-2">File Tugas</th>
                                     <th class="border px-4 py-2">Jumlah Pengumpulan</th>
                                     <th class="border px-4 py-2">Aksi</th>
@@ -60,6 +61,12 @@
                                         <td class="border px-4 py-2">{{ $tugas->kelas }}</td>
                                         <td class="border px-4 py-2">{{ $tugas->mata_pelajaran ?? 'Umum' }}</td>
                                         <td class="border px-4 py-2">{{ $tugas->pertemuan }}</td>
+                                        <td class="border px-4 py-2">
+                                            <span
+                                                class="text-sm {{ $tugas->deadline < now() ? 'text-red-600' : 'text-gray-600' }}">
+                                                {{ $tugas->deadline->format('d/m/Y H:i') }}
+                                            </span>
+                                        </td>
                                         <td class="border px-4 py-2">
                                             <a href="{{ asset('storage/' . $tugas->file) }}" target="_blank"
                                                 class="text-blue-600 hover:underline">

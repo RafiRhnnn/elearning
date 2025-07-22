@@ -11,7 +11,11 @@ class Tugas extends Model
 
     protected $table = 'tugas';
 
-    protected $fillable = ['guru_id', 'kelas', 'mata_pelajaran', 'pertemuan', 'file'];
+    protected $fillable = ['guru_id', 'kelas', 'mata_pelajaran', 'pertemuan', 'deadline', 'file'];
+
+    protected $casts = [
+        'deadline' => 'datetime'
+    ];
 
     public function guru()
     {
