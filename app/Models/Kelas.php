@@ -11,9 +11,10 @@ class Kelas extends Model
 
     protected $fillable = [
         'nama',
-        // 'email',
-        // 'password',
-        // 'role',
-        'kelas_id' // ← ini harus ada
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'kelas_id');
+    }
 }
