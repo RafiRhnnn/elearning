@@ -9,29 +9,35 @@
 <body class="flex min-h-screen bg-gray-100">
     @include('siswa.sidebar')
 
-    <main class="flex-1 p-6">
+    <main class="flex-1 p-4 sm:p-6 mt-16 sm:mt-0">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Tugas Pembelajaran</h2>
 
         <div class="bg-white p-4 rounded-lg shadow mb-6">
             <h3 class="text-lg font-semibold text-gray-700 mb-2">Informasi Siswa</h3>
-            <p class="text-gray-600"><strong>Nama:</strong> {{ Auth::user()->name }}</p>
-            <p class="text-gray-600"><strong>Kelas:</strong>
-                @if (Auth::user()->kelas_id)
-                    {{ Auth::user()->kelas_id }}
-                @else
-                    Kelas belum ditentukan
-                @endif
-            </p>
-            <p class="text-gray-600"><strong>Email:</strong> {{ Auth::user()->email }}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <p class="text-gray-600"><strong>Nama:</strong> {{ Auth::user()->name }}</p>
+                    <p class="text-gray-600"><strong>Email:</strong> {{ Auth::user()->email }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600"><strong>Kelas:</strong>
+                        @if (Auth::user()->kelas_id)
+                            {{ Auth::user()->kelas_id }}
+                        @else
+                            Kelas belum ditentukan
+                        @endif
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow">
+        <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Daftar Tugas</h3>
             <p class="text-gray-600 mb-4">Berikut adalah tugas yang harus Anda kerjakan:</p>
 
             @if ($tugasList->count() > 0)
                 <div class="overflow-x-auto">
-                    <table class="w-full table-auto border border-gray-300">
+                    <table class="w-full min-w-[800px] table-auto border border-gray-300">
                         <thead class="bg-gray-100">
                             <tr>
                                 <th class="border px-4 py-2">No</th>
@@ -120,34 +126,36 @@
         <!-- Modal Kumpul Tugas -->
         <div id="modalKumpul" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
             style="display: none;">
-            <div class="bg-white rounded-lg shadow-lg p-6 w-[400px]">
+            <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-[95vw] max-w-[450px]">
                 <h3 class="text-lg font-bold mb-4">Kumpulkan Tugas</h3>
                 <form action="{{ route('siswa.tugas.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="tugas_id" id="tugas_id">
 
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm">Nama Siswa</label>
-                        <input type="text" value="{{ Auth::user()->name }}" disabled
-                            class="w-full border rounded px-3 py-2 bg-gray-100 text-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-gray-700 text-sm">Nama Siswa</label>
+                            <input type="text" value="{{ Auth::user()->name }}" disabled
+                                class="w-full border rounded px-3 py-2 bg-gray-100 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm">Kelas</label>
+                            <input type="text" value="{{ Auth::user()->kelas_id }}" disabled
+                                class="w-full border rounded px-3 py-2 bg-gray-100 text-sm">
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm">Kelas</label>
-                        <input type="text" value="{{ Auth::user()->kelas_id }}" disabled
-                            class="w-full border rounded px-3 py-2 bg-gray-100 text-sm">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm">Mata Pelajaran</label>
-                        <input type="text" id="mata_pelajaran_display" disabled
-                            class="w-full border rounded px-3 py-2 bg-gray-100 text-sm">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm">Pertemuan</label>
-                        <input type="text" id="pertemuan_display" disabled
-                            class="w-full border rounded px-3 py-2 bg-gray-100 text-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-gray-700 text-sm">Mata Pelajaran</label>
+                            <input type="text" id="mata_pelajaran_display" disabled
+                                class="w-full border rounded px-3 py-2 bg-gray-100 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm">Pertemuan</label>
+                            <input type="text" id="pertemuan_display" disabled
+                                class="w-full border rounded px-3 py-2 bg-gray-100 text-sm">
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -157,7 +165,7 @@
                     </div>
 
                     <div class="mb-3" id="late_warning" style="display: none;">
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-sm">
                             ⚠️ <strong>Peringatan:</strong> Deadline sudah terlewat. Pengumpulan ini akan dianggap
                             terlambat.
                         </div>
@@ -173,15 +181,15 @@
                         <label class="block text-gray-700 text-sm mb-1">Upload File (Opsional)</label>
                         <input type="file" name="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
                             class="w-full border rounded px-3 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700">
-                        <small class="text-gray-500">Format: PDF, DOC, DOCX, XLS, XLSX, PNG, JPG, JPEG (Max:
+                        <small class="text-gray-500 block mt-1">Format: PDF, DOC, DOCX, XLS, XLSX, PNG, JPG, JPEG (Max:
                             5MB)</small>
                     </div>
 
-                    <div class="flex justify-end space-x-2">
+                    <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                         <button type="button" onclick="hideKumpulModal()"
-                            class="px-4 py-2 bg-gray-500 text-white rounded text-sm hover:bg-gray-600">Batal</button>
+                            class="px-4 py-2 bg-gray-500 text-white rounded text-sm hover:bg-gray-600 w-full sm:w-auto">Batal</button>
                         <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">Kumpulkan</button>
+                            class="px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 w-full sm:w-auto">Kumpulkan</button>
                     </div>
                 </form>
             </div>

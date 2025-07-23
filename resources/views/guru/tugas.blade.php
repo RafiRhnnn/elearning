@@ -10,18 +10,18 @@
 <body class="flex min-h-screen bg-gray-100">
     @include('guru.sidebar')
 
-    <main class="flex-1 p-6">
+    <main class="flex-1 p-4 sm:p-6 mt-16 sm:mt-0">
         <h2 class="text-2xl font-bold mb-4 text-gray-800">Tugas Kelas: {{ $kelas }}</h2>
 
         <!-- Tombol Tambah -->
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-4 gap-2">
             <a href="{{ route('guru.kelas.detail', $kelas) }}"
-                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 inline-block">
+                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 inline-block text-center">
                 ⬅ Kembali
             </a>
 
             <button onclick="showModal()"
-                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 inline-block">
+                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 inline-block text-center">
                 + Tambah Tugas
             </button>
         </div>
@@ -29,7 +29,7 @@
         <!-- Modal Form Tambah Tugas -->
         <div id="modalTambah" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
             style="display: none;">
-            <div class="bg-white rounded-lg shadow-lg p-4 w-[320px] sm:w-[360px]">
+            <div class="bg-white rounded-lg shadow-lg p-4 w-[95vw] max-w-[360px]">
                 <h3 class="text-lg font-bold mb-3">Tambah Tugas</h3>
                 <form action="{{ route('guru.tugas.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -92,7 +92,7 @@
 
         <!-- Table Tugas -->
         <div class="overflow-x-auto mt-6">
-            <table class="w-full table-auto border border-gray-300">
+            <table class="w-full min-w-[700px] table-auto border border-gray-300">
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="border px-4 py-2">No</th>

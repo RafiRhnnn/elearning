@@ -10,17 +10,17 @@
 <body class="flex min-h-screen bg-gray-100">
     @include('guru.sidebar')
 
-    <main class="flex-1 p-6">
-        <div class="flex justify-between items-center mb-6">
+    <main class="flex-1 p-4 sm:p-6 mt-16 sm:mt-0">
+        <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 gap-2">
             <h2 class="text-2xl font-bold text-gray-800">Detail Pengumpulan Tugas</h2>
             <a href="{{ route('guru.pengumpulan.index') }}"
-                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center">
                 ⬅ Kembali
             </a>
         </div>
 
         <!-- Info Tugas -->
-        <div class="bg-white p-6 rounded-lg shadow mb-6">
+        <div class="bg-white p-4 sm:p-6 rounded-lg shadow mb-6">
             <h3 class="text-lg font-semibold text-gray-700 mb-4">Informasi Tugas</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -45,12 +45,12 @@
         </div>
 
         <!-- Daftar Pengumpulan -->
-        <div class="bg-white p-6 rounded-lg shadow">
+        <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Daftar Siswa yang Mengumpulkan</h3>
 
             @if ($pengumpulanList->count() > 0)
                 <div class="overflow-x-auto">
-                    <table class="w-full table-auto border border-gray-300">
+                    <table class="w-full min-w-[700px] table-auto border border-gray-300">
                         <thead class="bg-gray-100">
                             <tr>
                                 <th class="border px-4 py-2">No</th>

@@ -10,13 +10,13 @@
 <body class="flex min-h-screen bg-gray-100">
     @include('guru.sidebar')
 
-    <main class="flex-1 p-6">
+    <main class="flex-1 p-4 sm:p-6 mt-16 sm:mt-0">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Detail Kelas: {{ $kelas }}</h2>
         <p class="text-gray-600 mb-6">Kelola materi dan tugas untuk kelas <strong>{{ $kelas }}</strong>.</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <!-- Kartu Materi -->
-            <div class="border rounded-lg shadow p-6 flex flex-col items-center text-center bg-white">
+            <div class="border rounded-lg shadow p-6 flex flex-col items-center text-center bg-white w-full">
                 <div class="text-4xl mb-3">
                     📖
                 </div>
@@ -27,7 +27,7 @@
             </div>
 
             <!-- Kartu Tugas -->
-            <div class="border rounded-lg shadow p-6 flex flex-col items-center text-center bg-white">
+            <div class="border rounded-lg shadow p-6 flex flex-col items-center text-center bg-white w-full">
                 <div class="text-4xl mb-3">
                     📝
                 </div>

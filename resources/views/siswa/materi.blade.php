@@ -9,23 +9,29 @@
 <body class="flex min-h-screen bg-gray-100">
     @include('siswa.sidebar')
 
-    <main class="flex-1 p-6">
+    <main class="flex-1 p-4 sm:p-6 mt-16 sm:mt-0">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Materi Pembelajaran</h2>
 
         <div class="bg-white p-4 rounded-lg shadow mb-6">
             <h3 class="text-lg font-semibold text-gray-700 mb-2">Informasi Siswa</h3>
-            <p class="text-gray-600"><strong>Nama:</strong> {{ Auth::user()->name }}</p>
-            <p class="text-gray-600"><strong>Kelas:</strong>
-                @if (Auth::user()->kelas_id)
-                    {{ Auth::user()->kelas_id }}
-                @else
-                    Kelas belum ditentukan
-                @endif
-            </p>
-            <p class="text-gray-600"><strong>Email:</strong> {{ Auth::user()->email }}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <p class="text-gray-600"><strong>Nama:</strong> {{ Auth::user()->name }}</p>
+                    <p class="text-gray-600"><strong>Email:</strong> {{ Auth::user()->email }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-600"><strong>Kelas:</strong>
+                        @if (Auth::user()->kelas_id)
+                            {{ Auth::user()->kelas_id }}
+                        @else
+                            Kelas belum ditentukan
+                        @endif
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow">
+        <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Daftar Materi</h3>
             <p class="text-gray-600 mb-4">Berikut adalah materi pembelajaran untuk kelas Anda:</p>
 
@@ -38,7 +44,7 @@
 
             @if ($materiList->count() > 0)
                 <div class="overflow-x-auto">
-                    <table class="w-full table-auto border border-gray-300">
+                    <table class="w-full min-w-[600px] table-auto border border-gray-300">
                         <thead class="bg-gray-100">
                             <tr>
                                 <th class="border px-4 py-2">No</th>
@@ -62,7 +68,8 @@
                                             📄 {{ basename($materi->file) }}
                                         </a>
                                     </td>
-                                    <td class="border px-4 py-2">{{ $materi->created_at->format('d/m/Y H:i') }}</td>
+                                    <td class="border px-4 py-2 text-sm">{{ $materi->created_at->format('d/m/Y H:i') }}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

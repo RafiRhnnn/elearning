@@ -10,7 +10,7 @@
 <body class="flex min-h-screen bg-gray-100">
     @include('guru.sidebar')
 
-    <main class="flex-1 p-6">
+    <main class="flex-1 p-4 sm:p-6 mt-16 sm:mt-0">
         <h2 class="text-2xl font-bold mb-4 text-gray-800">Pengumpulan Tugas Siswa</h2>
 
         <!-- Info Guru -->
@@ -22,26 +22,26 @@
 
         <!-- Tab Navigation -->
         <div class="bg-white rounded-lg shadow">
-            <div class="border-b border-gray-200">
-                <nav class="-mb-px flex space-x-8 px-6">
+            <div class="border-b border-gray-200 overflow-x-auto">
+                <nav class="-mb-px flex space-x-4 sm:space-x-8 px-2 sm:px-6">
                     <button onclick="showTab('daftar-tugas')" id="tab-daftar-tugas"
-                        class="tab-button border-b-2 border-blue-500 text-blue-600 py-4 px-1 text-sm font-medium">
+                        class="tab-button border-b-2 border-blue-500 text-blue-600 py-2 sm:py-4 px-1 text-sm font-medium">
                         Daftar Tugas Saya
                     </button>
                     <button onclick="showTab('semua-pengumpulan')" id="tab-semua-pengumpulan"
-                        class="tab-button border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-4 px-1 text-sm font-medium">
+                        class="tab-button border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-2 sm:py-4 px-1 text-sm font-medium">
                         Semua Pengumpulan
                     </button>
                 </nav>
             </div>
 
             <!-- Tab Content: Daftar Tugas -->
-            <div id="content-daftar-tugas" class="tab-content p-6">
+            <div id="content-daftar-tugas" class="tab-content p-2 sm:p-6">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Tugas yang Saya Berikan</h3>
 
                 @if ($tugasList->count() > 0)
                     <div class="overflow-x-auto">
-                        <table class="w-full table-auto border border-gray-300">
+                        <table class="w-full min-w-[700px] table-auto border border-gray-300">
                             <thead class="bg-gray-100">
                                 <tr>
                                     <th class="border px-4 py-2">No</th>
@@ -98,12 +98,12 @@
             </div>
 
             <!-- Tab Content: Semua Pengumpulan -->
-            <div id="content-semua-pengumpulan" class="tab-content p-6 hidden">
+            <div id="content-semua-pengumpulan" class="tab-content p-2 sm:p-6 hidden">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Semua Pengumpulan Tugas</h3>
 
                 @if ($pengumpulanList->count() > 0)
                     <div class="overflow-x-auto">
-                        <table class="w-full table-auto border border-gray-300">
+                        <table class="w-full min-w-[800px] table-auto border border-gray-300">
                             <thead class="bg-gray-100">
                                 <tr>
                                     <th class="border px-4 py-2">No</th>

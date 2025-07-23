@@ -1,28 +1,60 @@
-@extends('guru.layout')
+<!DOCTYPE html>
+<html lang="id">
 
-@section('content')
-    <div class="max-w-xl mx-auto p-6 bg-white rounded shadow">
-        <h2 class="text-2xl font-bold mb-4 text-gray-800">Tambah Tugas</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>Tambah Tugas</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
 
-        <form action="{{ route('guru.tugas.store', $kelas) }}" method="POST" enctype="multipart/form-data">
-            @csrf
+<body class="flex min-h-screen bg-gray-100">
+    @include('guru.sidebar')
 
-            <input type="hidden" name="guru_id" value="{{ Auth::id() }}">
-            <input type="hidden" name="kelas" value="{{ $kelas }}">
-
-            <div class="mb-4">
-                <label class="block font-semibold text-gray-700 mb-1">Pertemuan</label>
-                <input type="text" name="pertemuan" class="w-full border px-3 py-2 rounded" required>
+    <main class="flex-1 p-4 sm:p-6 mt-16 sm:mt-0">
+        <div class="max-w-xl mx-auto">
+            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 gap-2">
+                <h2 class="text-2xl font-bold text-gray-800">Tambah Tugas</h2>
+                <a href="{{ route('guru.tugas.index', $kelas) }}"
+                    class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center">
+                    ⬅ Kembali
+                </a>
             </div>
 
-            <div class="mb-4">
-                <label class="block font-semibold text-gray-700 mb-1">File Tugas (pdf, docx, jpg)</label>
-                <input type="file" name="file" class="w-full border px-3 py-2 rounded" required>
-            </div>
+            <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
+                <form action="{{ route('guru.tugas.store', $kelas) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
-            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                Simpan
-            </button>
-        </form>
-    </div>
-@endsection
+                    <input type="hidden" name="guru_id" value="{{ Auth::id() }}">
+                    <input type="hidden" name="kelas" value="{{ $kelas }}">
+
+                    <div class="mb-4">
+                        <label class="block font-semibold text-gray-700 mb-1">Pertemuan</label>
+                        <input type="text" name="pertemuan"
+                            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                            required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block font-semibold text-gray-700 mb-1">File Tugas (pdf, docx, jpg)</label>
+                        <input type="file" name="file"
+                            class="w-full border px-3 py-2 rounded file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-green-600 file:text-white hover:file:bg-green-700"
+                            required>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button type="submit"
+                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full sm:w-auto">
+                            Simpan
+                        </button>
+                        <a href="{{ route('guru.tugas.index', $kelas) }}"
+                            class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center w-full sm:w-auto">
+                            Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
