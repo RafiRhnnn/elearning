@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Pelajaran untuk Kelas</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -12,9 +13,9 @@
     @include('admin.sidebar')
 
     <!-- Konten Utama -->
-    <main class="flex-1 p-6">
-        <div class="max-w-3xl mx-auto bg-white p-8 rounded shadow">
-            <h2 class="text-2xl font-bold mb-6 text-center">Tambah Pelajaran untuk Kelas</h2>
+    <main class="flex-1 p-4 sm:p-6 pt-16 sm:pt-6">
+        <div class="max-w-3xl mx-auto bg-white p-4 sm:p-8 rounded shadow">
+            <h2 class="text-xl sm:text-2xl font-bold mb-6 text-center">Tambah Pelajaran untuk Kelas</h2>
 
             @if (session('success'))
                 <div class="mb-4 text-green-600">{{ session('success') }}</div>
@@ -68,8 +69,14 @@
                 <!-- Hari -->
                 <div class="mb-4">
                     <label for="hari" class="block text-sm font-semibold text-gray-700">Hari</label>
-                    <input type="text" name="hari" id="hari"
-                        class="w-full mt-1 p-2 border rounded bg-gray-50" value="{{ old('hari') }}" required>
+                    <select name="hari" id="hari" class="w-full mt-1 p-2 border rounded bg-gray-50" required>
+                        <option value="">-- Pilih Hari --</option>
+                        @foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $h)
+                            <option value="{{ $h }}" {{ old('hari') == $h ? 'selected' : '' }}>
+                                {{ $h }}
+                            </option>
+                        @endforeach
+                    </select>
                     @error('hari')
                         <p class="text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -78,8 +85,14 @@
                 <!-- Jam -->
                 <div class="mb-4">
                     <label for="jam" class="block text-sm font-semibold text-gray-700">Jam</label>
-                    <input type="text" name="jam" id="jam"
-                        class="w-full mt-1 p-2 border rounded bg-gray-50" value="{{ old('jam') }}" required>
+                    <select name="jam" id="jam" class="w-full mt-1 p-2 border rounded bg-gray-50" required>
+                        <option value="">-- Pilih Jam --</option>
+                        @foreach (['07:00', '08:00', '09:00', '10:00', '11:00', '13:00', '14:00'] as $j)
+                            <option value="{{ $j }}" {{ old('jam') == $j ? 'selected' : '' }}>
+                                {{ $j }}
+                            </option>
+                        @endforeach
+                    </select>
                     @error('jam')
                         <p class="text-sm text-red-600">{{ $message }}</p>
                     @enderror

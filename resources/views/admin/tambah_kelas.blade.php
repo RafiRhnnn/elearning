@@ -3,18 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Kelas</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="flex min-h-screen bg-gray-100">
-    <!-- Sidebar -->
     @include('admin.sidebar')
 
-    <!-- Konten Utama -->
-    <main class="flex-1 p-6">
-        <div class="max-w-xl mx-auto bg-white p-8 rounded shadow">
-            <h2 class="text-2xl font-bold mb-6 text-center">Form Tambah Kelas</h2>
+    <main class="flex-1 p-4 sm:p-6 pt-16 sm:pt-6">
+        <div class="max-w-xl mx-auto bg-white p-4 sm:p-8 rounded shadow">
+            <h2 class="text-xl sm:text-2xl font-bold mb-6 text-center">Form Tambah Kelas</h2>
 
             @if (session('success'))
                 <div class="mb-4 text-green-600">

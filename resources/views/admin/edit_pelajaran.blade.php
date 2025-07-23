@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Pelajaran</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -10,9 +11,9 @@
 <body class="flex min-h-screen bg-gray-100">
     @include('admin.sidebar')
 
-    <main class="flex-1 p-6">
-        <div class="max-w-3xl mx-auto bg-white p-8 rounded shadow">
-            <h2 class="text-2xl font-bold mb-6 text-center">Edit Pelajaran</h2>
+    <main class="flex-1 p-4 sm:p-6 pt-16 sm:pt-6">
+        <div class="max-w-3xl mx-auto bg-white p-4 sm:p-8 rounded shadow">
+            <h2 class="text-xl sm:text-2xl font-bold mb-6 text-center">Edit Pelajaran</h2>
 
             @if ($errors->any())
                 <div class="mb-4 text-red-600">
@@ -85,9 +86,9 @@
                 </div>
 
                 <!-- Tombol -->
-                <div class="flex justify-between">
+                <div class="flex flex-col sm:flex-row gap-2 sm:justify-between">
                     <a href="{{ route('admin.kelola_pelajaran') }}"
-                        class="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400 transition">
+                        class="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400 transition text-center">
                         Batal
                     </a>
                     <button type="submit"

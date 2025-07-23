@@ -3,19 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Pengguna</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="flex min-h-screen bg-gray-100">
-
-    <!-- Sidebar -->
     @include('admin.sidebar')
 
-    <!-- Konten Utama -->
-    <main class="flex-1 p-6">
-        <div class="max-w-xl mx-auto bg-white p-8 rounded shadow">
-            <h2 class="text-2xl font-bold mb-6 text-center">Edit Pengguna</h2>
+    <main class="flex-1 p-4 sm:p-6 pt-16 sm:pt-6">
+        <div class="max-w-xl mx-auto bg-white p-4 sm:p-8 rounded shadow">
+            <h2 class="text-xl sm:text-2xl font-bold mb-6 text-center">Edit Pengguna</h2>
 
             @if (session('success'))
                 <div class="mb-4 text-green-600">{{ session('success') }}</div>
@@ -68,7 +66,10 @@
                         <p class="text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-                <div>
+
+                <!-- Kelas -->
+                <div class="mb-4">
+                    <label for="kelas_id" class="block text-sm font-semibold text-gray-700">Kelas</label>
                     <select name="kelas_id" id="kelas_id" class="w-full mt-1 p-2 border rounded bg-gray-50">
                         <option value="">-- Pilih Kelas --</option>
                         @foreach ($kelas as $k)
@@ -78,13 +79,12 @@
                             </option>
                         @endforeach
                     </select>
-
                 </div>
 
                 <!-- Tombol -->
-                <div class="flex justify-end">
+                <div class="flex flex-col sm:flex-row gap-2 sm:justify-end">
                     <a href="{{ route('admin.kelola_user') }}"
-                        class="bg-gray-300 text-gray-800 py-2 px-4 rounded mr-2 hover:bg-gray-400">
+                        class="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400 text-center">
                         Batal
                     </a>
                     <button type="submit"
