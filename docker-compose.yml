@@ -10,47 +10,13 @@ services:
             - "${APP_PORT:-8000}:80"
         environment:
             DB_CONNECTION: ${DB_CONNECTION:-mysql}
-            DB_HOST: ${DB_HOST:-mysql} # Changed to 'mysql' to match the service name
-            DB_PORT: ${DB_PORT:-3306}
-            DB_DATABASE: ${DB_DATABASE:-laravel_db}
-            DB_USERNAME: ${DB_USERNAME:-root}
-            DB_PASSWORD: ${DB_PASSWORD:-}
-        depends_on:
-            - db
-            - phpmyadmin
-        networks:
-            - laravel
-
-    db:
-        image: mysql:8.0 # Using a specific version is good practice
-        container_name: mysql_db
-        environment:
-            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-            MYSQL_DATABASE: ${DB_NAME}
-            MYSQL_USER: ${DB_USERNAME}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
-        volumes:
-            - mysql_data:/var/lib/mysql
-        ports:
-            - "${DB_PORT:-3306}:3306" # Expose MySQL port if needed for direct access
-        networks:
-            - laravel
-
-    phpmyadmin: # Added phpmyadmin service
-        image: phpmyadmin/phpmyadmin
-        container_name: phpmyadmin_app
-        links:
-            - db:db
-        environment:
-            PMA_HOST: db # Connects to your mysql service
-            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD} # Use your root password from .env.deploy
-        ports:
-            - "${PHPMYADMIN_PORT:-8080}:80" # Define a port for phpmyadmin
+            DB_HOST: ${DB_HOST} # Your DigitalOcean database host
+            DB_PORT: ${DB_PORT:-25060} # DigitalOcean typically uses port 25060
+            DB_DATABASE: ${DB_DATABASE}
+            DB_USERNAME: ${DB_USERNAME}
+            DB_PASSWORD: ${DB_PASSWORD}
         networks:
             - laravel
 
 networks:
     laravel:
-
-volumes:
-    mysql_data: # Define the named volume for MySQL data persistence
