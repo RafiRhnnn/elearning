@@ -85,8 +85,7 @@ jobs:
             echo "Masuk direktori $DIR";
             cd $DIR
             echo "Restart Docker Compose"
-            # Use --remove-orphans to remove containers not defined in the compose file
-            docker compose down --remove-orphans
+            docker compose down
             docker compose --env-file .env up -d --build
 
             echo "Menunggu Laravel siap..."
