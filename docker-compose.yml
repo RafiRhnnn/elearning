@@ -16,12 +16,12 @@ services:
             DB_USERNAME: ${DB_USERNAME:-root}
             DB_PASSWORD: ${DB_PASSWORD:-}
         depends_on:
-            - mysql
+            - db
             - phpmyadmin
         networks:
             - laravel
 
-    mysql:
+    db:
         image: mysql:8.0 # Using a specific version is good practice
         container_name: mysql_db
         environment:
@@ -40,9 +40,9 @@ services:
         image: phpmyadmin/phpmyadmin
         container_name: phpmyadmin_app
         links:
-            - mysql:db
+            - db:db
         environment:
-            PMA_HOST: mysql # Connects to your mysql service
+            PMA_HOST: db # Connects to your mysql service
             MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD} # Use your root password from .env.deploy
         ports:
             - "${PHPMYADMIN_PORT:-8080}:80" # Define a port for phpmyadmin
