@@ -90,19 +90,10 @@ jobs:
             docker compose --env-file .env up -d --build
 
             echo "Menunggu Laravel siap..."
-            # Added a loop to wait for the laravel_app container to be healthy
-            ATTEMPTS=0
-            MAX_ATTEMPTS=60 # Wait up to 2 minutes (60 * 2 seconds)
-            until docker inspect -f '{{.State.Health.Status}}' $CONTAINER | grep -q "healthy" || docker inspect -f '{{.State.Running}}' $CONTAINER | grep -q "true" && docker exec $CONTAINER php artisan --version > /dev/null 2>&1; do
-              if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
-                echo "Error: Laravel container did not become ready within the expected time."
-                docker compose logs $CONTAINER
-                exit 1
-              fi
-              echo "Menunggu Laravel container ($ATTEMPTS/$MAX_ATTEMPTS)..."
-              # Do not try to start the container again here, docker compose up should have done it
-              sleep 2
-              ATTEMPTS=$((ATTEMPTS+1))
+            # Wait for the Laravel application to be ready
+            while ! docker exec $CONTAINER curl -s http://localhost:8000 > /dev/null; do
+              echo "Menunggu Laravel siap..."
+              sleep 5
             done
 
             echo "Laravel siap!"
