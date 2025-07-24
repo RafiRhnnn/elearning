@@ -62,8 +62,8 @@ jobs:
             else
               echo "Pull update..."
               cd $DIR
-              # Changed git pull to git reset --hard origin/$BRANCH for clean update
-              git reset --hard origin/$BRANCH
+              git fetch 
+              git pull origin $BRANCH
             fi
 
             echo "Menyimpan .env untuk Laravel"
