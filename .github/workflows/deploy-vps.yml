@@ -87,7 +87,7 @@ jobs:
             echo "Restart Docker Compose"
             # Use --remove-orphans to remove containers not defined in the compose file
             docker compose down --remove-orphans
-            docker compose --env-file .env.deploy up -d --build
+            docker compose --env-file .env up -d --build
 
             echo "Menunggu Laravel siap..."
             # Added a loop to wait for the laravel_app container to be healthy
