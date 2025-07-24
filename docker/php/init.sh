@@ -1,9 +1,10 @@
 #!/bin/bash
-set -e
+set -x  # Tambah ini agar semua perintah di-log saat dijalankan
+
 
 
 # atur kepemilikan dan hak akses direktori
-chown -R $USER_ID:$GROUP_ID /var/www/html
+chown -R www-data:www-data /var/www/html
 echo "Mengatur hak akses direktori storage dan bootstrap/cache..."
 # Buat folder dan file log jika belum ada
 mkdir -p /var/www/html/storage/logs
