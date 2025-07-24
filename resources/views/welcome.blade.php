@@ -22,7 +22,7 @@
                     <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-12 w-12">
                     <div>
                         <h1 class="text-xl font-bold text-green-700">E-Learning SMA</h1>
-                        <p class="text-sm text-gray-600">SMA Negeri Terbaik</p>
+                        <p class="text-sm text-gray-600">SMA Negeri Terbaik Seindonesia</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
