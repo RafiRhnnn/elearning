@@ -10,8 +10,8 @@ services:
             - "${APP_PORT:-8000}:80"
         environment:
             DB_CONNECTION: ${DB_CONNECTION:-mysql}
-            DB_HOST: ${DB_HOST} # Your DigitalOcean database host
-            DB_PORT: ${DB_PORT:-25060} # DigitalOcean typically uses port 25060
+            DB_HOST: ${DB_HOST}
+            DB_PORT: ${DB_PORT:-25060}
             DB_DATABASE: ${DB_DATABASE}
             DB_USERNAME: ${DB_USERNAME}
             DB_PASSWORD: ${DB_PASSWORD}
