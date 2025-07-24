@@ -23,23 +23,23 @@ jobs:
           script: |
             REPO="https://github.com/RafiRhnnn/elearning.git"
             DIR="${{ secrets.VPS_PATH }}"
-            CONTAINER="laravel_app"
+            CONTAINER="laravel_app" # Nama kontainer sesuai docker-compose.yml
             BRANCH="production"
 
-            echo "Cek git"
+            echo "Cek git..."
             if ! command -v git &>/dev/null; then
               echo "Install git..."
               sudo apt-get update && sudo apt-get install -y git
             fi
 
-            echo "Cek docker"
+            echo "Cek docker..."
             if ! command -v docker &>/dev/null; then
               echo "Install docker..."
               curl -fsSL https://get.docker.com | sh
-              sudo usermod -aG docker $USER
+              sudo usermod -aG docker $USER || true # Tambahkan || true agar tidak gagal jika user sudah di grup
             fi
 
-            echo "Cek docker compose"
+            echo "Cek docker compose..."
             if ! docker compose version &>/dev/null; then
               echo "Install docker compose plugin..."
               mkdir -p ~/.docker/cli-plugins
@@ -48,63 +48,90 @@ jobs:
               chmod +x ~/.docker/cli-plugins/docker-compose
             fi
 
-            echo "Cek nodejs 20"
+            echo "Cek nodejs 20..."
             if ! command -v node &>/dev/null || ! node -v | grep -q "v20"; then
               echo "Install Node.js 20..."
               curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
               sudo apt-get install -y nodejs
             fi
 
-            echo "Clone atau pull repo"
+            echo "Clone atau pull repo..."
             if [ ! -d "$DIR/.git" ]; then
-              echo "Clone repo..."
+              echo "Clone repo ke $DIR..."
               git clone --branch $BRANCH $REPO $DIR
             else
-              echo "Pull update..."
+              echo "Pull update di $DIR..."
               cd $DIR
-              git fetch 
+              git fetch
               git pull origin $BRANCH
             fi
 
-            echo "Menyimpan .env untuk Laravel"
-            # Ensure the directory exists before writing the file
-            mkdir -p "${{ secrets.VPS_PATH }}"
-            echo "${{ secrets.LARAVEL_ENV }}" > ${{ secrets.VPS_PATH }}/.env
+            echo "Menyimpan .env untuk Laravel (dari GitHub Secret LARAVEL_ENV)..."
+            # Pastikan direktori ada sebelum menulis file
+            mkdir -p "$DIR"
+            # Pastikan secret LARAVEL_ENV berisi seluruh konten file .env Anda
+            echo "${{ secrets.LARAVEL_ENV }}" > "$DIR/.env"
 
-            echo "Menyiapkan environment variables untuk Docker Compose"
-            # Clear previous .env.deploy content to avoid appending duplicates
-            > "$DIR/.env.deploy"
-            echo "APP_PORT=${{ secrets.APP_PORT }}" >> "$DIR/.env.deploy"
-            echo "DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}" >> "$DIR/.env.deploy"
-            echo "DB_HOST=${{ secrets.DB_HOST }}" >> "$DIR/.env.deploy"
-            echo "DB_NAME=${{ secrets.DB_NAME }}" >> "$DIR/.env.deploy"
-            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> "$DIR/.env.deploy"
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> "$DIR/.env.deploy"
-            echo "PHPMYADMIN_PORT=${{ secrets.PHPMYADMIN_PORT || 8080 }}" >> "$DIR/.env.deploy" # Added PHPMYADMIN_PORT
+            echo "Menyiapkan environment variables untuk Docker Compose (.env.deploy)..."
+            # copy semua isi dari .env ke .env.deploy
+            rm -f "$DIR/.env.deploy" 
+            cp "$DIR/.env" "$DIR/.env.deploy"
+            # Tambahkan DB_SSLMODE dan DB_SSL_CA jika Anda menggunakannya
+            # Pastikan secrets ini ada di GitHub Actions
+            if [ -n "${{ secrets.DB_SSLMODE }}" ]; then
+              echo "DB_SSLMODE=${{ secrets.DB_SSLMODE }}" >> "$DIR/.env.deploy"
+            fi
+            if [ -n "${{ secrets.DB_SSL_CA }}" ]; then
+              echo "DB_SSL_CA=${{ secrets.DB_SSL_CA }}" >> "$DIR/.env.deploy"
+            fi
 
-            echo "Masuk direktori $DIR";
+
+            echo "Masuk direktori $DIR..."
             cd $DIR
-            echo "Restart Docker Compose"
-            docker compose down
-            docker compose --env-file .env up -d --build
 
-            echo "Menunggu Laravel siap..."
-            # Wait for the Laravel application to be ready
-            until docker exec $CONTAINER php artisan --version > /dev/null 2>&1; do
-              echo "Menunggu Laravel container..."
-              docker container start $CONTAINER
+            echo "Restart Docker Compose..."
+            docker compose down
+            # Gunakan .env.deploy untuk environment variable Docker Compose
+            # dan pastikan file docker-compose.yml yang terbaru ada di $DIR
+            # Nama service di docker-compose.yml adalah 'app', jadi kontainer akan menjadi 'laravel_app'
+            docker compose --env-file .env.deploy up -d --build
+
+            echo "Menunggu Laravel container siap (Apache running)..."
+            ATTEMPTS=0
+            MAX_ATTEMPTS=60 # Tunggu hingga 2 menit (60 * 2 detik)
+            until docker inspect -f '{{.State.Running}}' $CONTAINER | grep -q "true" && docker exec $CONTAINER /bin/sh -c "apache2 -v > /dev/null 2>&1"; do
+              if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
+                echo "Error: Laravel container tidak aktif dalam waktu yang ditentukan."
+                docker compose logs $CONTAINER
+                exit 1
+              fi
+              echo "Menunggu Laravel container ($ATTEMPTS/$MAX_ATTEMPTS)..."
               sleep 2
+              ATTEMPTS=$((ATTEMPTS+1))
             done
 
-            echo "Laravel siap!"
-            echo "composer install"
-            docker exec $CONTAINER composer install --optimize-autoloader --no-dev
-            echo "buat key"
-            docker exec $CONTAINER php artisan key:generate
-            echo "artisan migrate"
-            docker exec $CONTAINER php artisan migrate --force
-             docker exec $CONTAINER php artisan storage:link
+            echo "Laravel container sudah berjalan. Melanjutkan instalasi Laravel..."
+
+            echo "Menjalankan composer install..."
+            docker exec $CONTAINER composer install --optimize-autoloader --no-dev || { echo "Composer install gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+
+            echo "Menghasilkan APP_KEY..."
+            docker exec $CONTAINER php artisan key:generate || { echo "Key generate gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+
+            echo "Menjalankan migrasi database..."
+            # Menjalankan migrasi, force untuk production
+            docker exec $CONTAINER php artisan migrate --force || { echo "Migrasi database gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+
+            echo "Membuat symbolic link storage..."
+            docker exec $CONTAINER php artisan storage:link || { echo "Storage link gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+
+            echo "Mengoptimalkan cache Laravel..."
+            docker exec $CONTAINER php artisan config:clear
+            docker exec $CONTAINER php artisan cache:clear
+            docker exec $CONTAINER php artisan view:clear
+            docker exec $CONTAINER php artisan route:clear
             docker exec $CONTAINER php artisan config:cache
             docker exec $CONTAINER php artisan route:cache
             docker exec $CONTAINER php artisan view:cache
+
             echo "Selesai! Aplikasi Laravel telah dideploy."

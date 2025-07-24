@@ -2,17 +2,6 @@
 set -e
 
 
-# Ganti nilai DB_HOST, DB_DATABASE, DLL dari ENV Docker
-echo "Menyesuaikan .env dengan variabel environment. Dengan koneksi ${DB_CONNECTION}"
-sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=${DB_CONNECTION}/" .env
-sed -i "s/^#* *DB_HOST=.*/DB_HOST=${DB_HOST}/" .env
-sed -i 's/^#* *DB_PORT=3306*/DB_PORT=3306/' .env
-sed -i "s/^#* *DB_DATABASE=.*/DB_DATABASE=${DB_DATABASE}/" .env
-sed -i "s/^#* *DB_USERNAME=.*/DB_USERNAME=${DB_USERNAME}/" .env
-sed -i "s/^#* *DB_PASSWORD=.*/DB_PASSWORD=${DB_PASSWORD}/" .env
-
-cat .env | grep DB_
-
 # atur kepemilikan dan hak akses direktori
 chown -R $USER_ID:$GROUP_ID /var/www/html
 echo "Mengatur hak akses direktori storage dan bootstrap/cache..."
