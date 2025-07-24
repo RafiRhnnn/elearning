@@ -91,9 +91,10 @@ jobs:
 
             echo "Menunggu Laravel siap..."
             # Wait for the Laravel application to be ready
-            while ! docker exec $CONTAINER curl -s http://localhost:8000 > /dev/null; do
-              echo "Menunggu Laravel siap..."
-              sleep 5
+            until docker exec $CONTAINER php artisan --version > /dev/null 2>&1; do
+              echo "Menunggu Laravel container..."
+              docker container start $CONTAINER
+              sleep 2
             done
 
             echo "Laravel siap!"
