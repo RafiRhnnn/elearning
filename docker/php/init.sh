@@ -34,11 +34,19 @@ composer install --optimize-autoloader --no-dev
 php artisan migrate
 # Jalankan perintah artisan sesuai environment
 if [ "$APP_ENV" = "production" ]; then
+    echo "install npm dependencies"
+    npm install
+    sleep 2
+    npm run build
+    sleep 2
+
     echo "Mode production: menjalankan caching..."
     php artisan config:clear
     php artisan cache:clear
     php artisan view:clear
     php artisan route:clear
+
+
 
     php artisan config:cache
     php artisan route:cache
