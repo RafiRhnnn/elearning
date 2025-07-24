@@ -39,7 +39,6 @@ jobs:
               sudo usermod -aG docker $USER
             fi
 
-
             echo "Cek docker compose"
             if ! docker compose version &>/dev/null; then
               echo "Install docker compose plugin..."
@@ -63,31 +62,47 @@ jobs:
             else
               echo "Pull update..."
               cd $DIR
-              git reset --hard HEAD
-              git pull origin $BRANCH
+              # Changed git pull to git reset --hard origin/$BRANCH for clean update
+              git reset --hard origin/$BRANCH
             fi
 
             echo "Menyimpan .env untuk Laravel"
+            # Ensure the directory exists before writing the file
+            mkdir -p "${{ secrets.VPS_PATH }}"
             echo "${{ secrets.LARAVEL_ENV }}" > ${{ secrets.VPS_PATH }}/.env
 
             echo "Menyiapkan environment variables untuk Docker Compose"
+            # Clear previous .env.deploy content to avoid appending duplicates
+            > "$DIR/.env.deploy"
             echo "APP_PORT=${{ secrets.APP_PORT }}" >> "$DIR/.env.deploy"
             echo "DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}" >> "$DIR/.env.deploy"
             echo "DB_HOST=${{ secrets.DB_HOST }}" >> "$DIR/.env.deploy"
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> "$DIR/.env.deploy"
             echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> "$DIR/.env.deploy"
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> "$DIR/.env.deploy"
+            echo "PHPMYADMIN_PORT=${{ secrets.PHPMYADMIN_PORT || 8080 }}" >> "$DIR/.env.deploy" # Added PHPMYADMIN_PORT
 
             echo "Masuk direktori $DIR";
             cd $DIR
             echo "Restart Docker Compose"
-            docker compose down
+            # Use --remove-orphans to remove containers not defined in the compose file
+            docker compose down --remove-orphans
             docker compose --env-file .env.deploy up -d --build
+
             echo "Menunggu Laravel siap..."
-            until docker exec $CONTAINER php artisan --version > /dev/null 2>&1; do
-              echo "Menunggu Laravel container..."
-              docker container start $CONTAINER
+            # Added a loop to wait for the laravel_app container to be healthy
+            ATTEMPTS=0
+            MAX_ATTEMPTS=60 # Wait up to 2 minutes (60 * 2 seconds)
+            until docker inspect -f '{{.State.Health.Status}}' $CONTAINER | grep -q "healthy" || docker inspect -f '{{.State.Running}}' $CONTAINER | grep -q "true" && docker exec $CONTAINER php artisan --version > /dev/null 2>&1; do
+              if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
+                echo "Error: Laravel container did not become ready within the expected time."
+                docker compose logs $CONTAINER
+                exit 1
+              fi
+              echo "Menunggu Laravel container ($ATTEMPTS/$MAX_ATTEMPTS)..."
+              # Do not try to start the container again here, docker compose up should have done it
               sleep 2
+              ATTEMPTS=$((ATTEMPTS+1))
             done
 
             echo "Laravel siap!"
