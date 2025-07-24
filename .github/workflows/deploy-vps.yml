@@ -112,3 +112,8 @@ jobs:
             docker exec $CONTAINER php artisan key:generate
             echo "artisan migrate"
             docker exec $CONTAINER php artisan migrate --force
+             docker exec $CONTAINER php artisan storage:link
+            docker exec $CONTAINER php artisan config:cache
+            docker exec $CONTAINER php artisan route:cache
+            docker exec $CONTAINER php artisan view:cache
+            echo "Selesai! Aplikasi Laravel telah dideploy."
