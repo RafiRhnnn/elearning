@@ -94,21 +94,17 @@ jobs:
             # Gunakan .env.deploy untuk environment variable Docker Compose
             # dan pastikan file docker-compose.yml yang terbaru ada di $DIR
             # Nama service di docker-compose.yml adalah 'app', jadi kontainer akan menjadi 'laravel_app'
-            docker compose --env-file .env.deploy up -d --build
-
+            docker compose --env-file .env up -d --build
+            sleep 2
             echo "Menunggu Laravel container siap (Apache running)..."
-            ATTEMPTS=0
-            MAX_ATTEMPTS=60 # Tunggu hingga 2 menit (60 * 2 detik)
-            until docker inspect -f '{{.State.Running}}' $CONTAINER | grep -q "true" && docker exec $CONTAINER /bin/sh -c "apache2 -v > /dev/null 2>&1"; do
-              if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
-                echo "Error: Laravel container tidak aktif dalam waktu yang ditentukan."
-                docker compose logs $CONTAINER
-                exit 1
-              fi
-              echo "Menunggu Laravel container ($ATTEMPTS/$MAX_ATTEMPTS)..."
-              sleep 2
-              ATTEMPTS=$((ATTEMPTS+1))
-            done
+            sleep 2
+
+            # Cek apakah kontainer sudah berjalan
+            if ! docker ps | grep -q $CONTAINER; then
+              echo "Kontainer $CONTAINER tidak ditemukan! Pastikan docker-compose.yml sudah benar."
+              docker compose logs $CONTAINER
+              exit 1
+            fi
 
             echo "Laravel container sudah berjalan. Melanjutkan instalasi Laravel..."
 

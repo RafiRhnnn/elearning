@@ -9,8 +9,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Aktifkan mod_rewrite untuk Laravel
 RUN a2enmod rewrite
 
+
+
 # Salin konfigurasi Apache
 COPY docker/php/apache.conf /etc/apache2/sites-available/000-default.conf
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm
+
+
 
 # salin entrypoint
 COPY docker/php/init.sh /usr/local/bin/init.sh
