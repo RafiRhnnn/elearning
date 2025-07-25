@@ -25,6 +25,9 @@ jobs:
             DIR="${{ secrets.VPS_PATH }}"
             CONTAINER="laravel_php_fpm" 
             BRANCH="production"
+            export APP_DOMAIN="${{ secrets.APP_DOMAIN }}"
+            export EMAIL="${{ secrets.EMAIL }}"
+            export LARAVEL_ENV="${{ secrets.LARAVEL_ENV }}"
 
             echo "Cek git..."
             if ! command -v git &>/dev/null; then
@@ -69,18 +72,18 @@ jobs:
             echo "Menyimpan .env untuk Laravel (dari GitHub Secret LARAVEL_ENV)..."
             # Pastikan direktori ada sebelum menulis file
             mkdir -p "$DIR"
-            # Pastikan secret LARAVEL_ENV berisi seluruh konten file .env Anda
-            echo "${{ secrets.LARAVEL_ENV }}" > "$DIR/.env"
 
 
 
             echo "Masuk direktori $DIR..."
             cd $DIR
-
+            touch .env 
             if [ ! -f "$DIR/.env" ]; then
               echo "File .env tidak ditemukan. Gagal melanjutkan."
               exit 1
             fi
+            # Pastikan secret LARAVEL_ENV berisi seluruh konten file .env Anda
+            echo "$LARAVEL_ENV" > "$DIR/.env"
 
             echo "Prepare installing certbot"
             docker compose stop nginx
@@ -100,8 +103,8 @@ jobs:
             echo "Menunggu Laravel PHP-FPM container siap..."
             sleep 2 # Biarkan Nginx dan PHP-FPM berinteraksi
             docker compose run --rm certbot certonly --webroot --webroot-path=/var/www/certbot \
-            --email "${secrets.EMAIL}" --agree-tos --no-eff-email \
-            -d "{${secrets.APP_DOMAIN}}" -d www."{${secrets.APP_DOMAIN}}"
+            --email "$EMAIL" --agree-tos --no-eff-email \
+            -d "$APP_DOMAIN" -d www."$APP_DOMAIN"
 
             # Cek apakah kontainer PHP-FPM sudah berjalan
             if ! docker ps | grep -q $CONTAINER; then
