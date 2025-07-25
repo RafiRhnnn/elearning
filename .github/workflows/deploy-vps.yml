@@ -70,7 +70,6 @@ jobs:
             fi
 
             echo "Menyimpan .env untuk Laravel (dari GitHub Secret LARAVEL_ENV)..."
-            # Pastikan direktori ada sebelum menulis file
             mkdir -p "$DIR"
 
 
