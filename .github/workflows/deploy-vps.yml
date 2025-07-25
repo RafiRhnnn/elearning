@@ -135,8 +135,9 @@ jobs:
 
             sleep 2
             echo "jalankan npm install..."
-            docker exec $CONTAINER npm install || { echo "NPM install gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+            docker exec -w "$DIR" "$CONTAINER" npm install
+
             echo "jalankan npm run build..."
-            docker exec $CONTAINER npm run build || { echo "NPM build gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+            docker exec -w "$DIR" "$CONTAINER" npm run build 
 
             echo "Selesai! Aplikasi Laravel telah dideploy."

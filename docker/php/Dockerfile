@@ -20,8 +20,11 @@ RUN apt-get update && apt-get install -y \
     php8.2-pdo 
 
 # Install nodejs 20
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -
-RUN apt-get install -y nodejs
+# Install Node.js dan npm dari Nodesource
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g npm
+
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

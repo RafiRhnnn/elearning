@@ -30,4 +30,4 @@ else
     php artisan route:clear
 fi
 
-exec php-fpm8.2 -F
+exec php-fpm8.2
