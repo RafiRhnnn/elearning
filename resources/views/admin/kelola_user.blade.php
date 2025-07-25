@@ -12,7 +12,7 @@
 
     @include('admin.sidebar')
 
-    <main class="flex-1 p-4 sm:p-6 sm:ml-0">
+    <main class="flex-1 p-4 sm:p-6 pt-16 sm:pt-6 sm:ml-0">
         <h2 class="text-xl sm:text-2xl font-bold mb-4">Kelola Pengguna</h2>
 
         @if (session('success'))
