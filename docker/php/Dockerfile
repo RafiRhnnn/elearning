@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM php:8.2-fpm
 
 # Install tools dasar + add-apt-repository
 RUN apt-get update && apt-get install -y \
