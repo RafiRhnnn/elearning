@@ -8,6 +8,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 
 # Ekspos port Nginx
 EXPOSE 80
+EXPOSE 443
 
 # Perintah default Nginx
 CMD ["nginx", "-g", "daemon off;"]

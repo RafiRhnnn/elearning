@@ -84,13 +84,6 @@ jobs:
             # Pastikan secret LARAVEL_ENV berisi seluruh konten file .env Anda
             echo "$LARAVEL_ENV" > "$DIR/.env"
 
-            echo "Prepare installing certbot"
-            docker compose stop nginx
-
-
-
-
-
             echo "Restart Docker Compose..."
             docker compose down --remove-orphans 
             # Gunakan .env untuk environment variable Docker Compose
@@ -98,6 +91,24 @@ jobs:
             # Nama service di docker-compose.yml adalah 'app', jadi kontainer akan menjadi 'laravel_app'
             docker compose --env-file .env up -d --build
             sleep 5 # Beri waktu lebih untuk Nginx dan PHP-FPM siap
+
+            # Cek apakah sertifikat sudah ada
+            if [ ! -f "/var/www/html/certbot/conf/live/technonusa.me/fullchain.pem" ]; then
+                echo "Sertifikat SSL tidak ditemukan. Memulai proses pembuatan sertifikat dengan Certbot..."
+                
+                # Hentikan Nginx sementara untuk standalone challenge atau pastikan direktori .well-known bisa diakses
+                docker compose stop nginx
+
+                # Jalankan Certbot untuk membuat sertifikat
+                docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot \
+                    -d technonusa.me -d www.technonusa.me \
+                    --email 22552011087@utb-univ.ac.id --agree-tos --no-eff-email --force-renewal
+
+                # Jalankan kembali semua service
+                docker compose up -d --remove-orphans
+            else
+                echo "Sertifikat SSL sudah ada."
+            fi
 
             echo "Menunggu Laravel PHP-FPM container siap..."
             sleep 2 # Biarkan Nginx dan PHP-FPM berinteraksi
@@ -139,22 +150,6 @@ jobs:
 
             echo "jalankan npm run build..."
              npm run build 
-
-            sleep 2
-
-            echo "applying https with certbot"
-            docker run --rm \
-            -v $DIR/certbot/conf:/etc/letsencrypt \
-            -v $DIR/certbot/www:/var/www/certbot \
-            -v $DIR/public:/var/www/html \
-            certbot/certbot certonly \
-            --webroot \
-            --webroot-path=/var/www/html \
-            -d technonusa.me \
-            -d www.technonusa.me \
-            --email 22552011087@utb-univ.ac.id \
-            --agree-tos \
-            --no-eff-email
 
 
             echo "Selesai! Aplikasi Laravel telah dideploy."
