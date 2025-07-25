@@ -21,9 +21,11 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            set -eo pipefail # Exit segera jika ada perintah yang gagal
+
             REPO="https://github.com/RafiRhnnn/elearning.git"
             DIR="${{ secrets.VPS_PATH }}"
-            CONTAINER="laravel_php_fpm" 
+            CONTAINER="laravel_php_fpm" # Ubah ini ke nama kontainer PHP-FPM
             BRANCH="production"
 
             echo "Cek git..."
@@ -58,80 +60,92 @@ jobs:
             echo "Clone atau pull repo..."
             if [ ! -d "$DIR/.git" ]; then
                 echo "Clone repo ke $DIR..."
-                git clone --branch $BRANCH $REPO $DIR
+                git clone --branch "$BRANCH" "$REPO" "$DIR"
             else
                 echo "Pull update di $DIR..."
-                cd $DIR
+                cd "$DIR"
                 git fetch
-                git pull origin $BRANCH
+                git pull origin "$BRANCH"
             fi
 
-            echo "Menyimpan .env untuk Laravel (dari GitHub Secret LARAVEL_ENV)..."
-            # Pastikan direktori ada sebelum menulis file
+            echo "Menyimpan .env lengkap untuk Laravel (dari GitHub Secret LARAVEL_ENV)..."
             mkdir -p "$DIR"
-            # Pastikan secret LARAVEL_ENV berisi seluruh konten file .env Anda
-            echo "${{ secrets.LARAVEL_ENV }}" > "$DIR/.env"
+            # Tulis konten utama LARAVEL_ENV, hapus carriage return
+            echo "${{ secrets.LARAVEL_ENV }}" | tr -d '\r' > "$DIR/.env"
+            # Pastikan ada newline di akhir file untuk menghindari penggabungan baris
+            echo "" >> "$DIR/.env"
 
+            # Ekstrak variabel DB dan APP_PORT dari .env utama ke .env.docker
+            echo "Membuat .env.docker untuk Docker Compose dengan variabel yang diperlukan..."
+            # Clear existing .env.docker if it exists
+            > "$DIR/.env.docker"
 
-            # Tambahkan DB_SSLMODE dan DB_SSL_CA jika Anda menggunakannya
-            # Pastikan secrets ini ada di GitHub Actions
-            if [ -n "${{ secrets.DB_SSLMODE }}" ]; then
-                echo "DB_SSLMODE=${{ secrets.DB_SSLMODE }}" >> "$DIR/.env"
-            fi
-            if [ -n "${{ secrets.DB_SSL_CA }}" ]; then
-                echo "DB_SSL_CA=${{ secrets.DB_SSL_CA }}" >> "$DIR/.env"
-            fi
+            # Baca .env baris per baris dan tambahkan variabel yang relevan ke .env.docker
+            {
+              grep '^APP_PORT=' "$DIR/.env" | tr -d '\r'
+              grep '^DB_CONNECTION=' "$DIR/.env" | tr -d '\r'
+              grep '^DB_HOST=' "$DIR/.env" | tr -d '\r'
+              grep '^DB_PORT=' "$DIR/.env" | tr -d '\r'
+              grep '^DB_DATABASE=' "$DIR/.env" | tr -d '\r'
+              grep '^DB_USERNAME=' "$DIR/.env" | tr -d '\r'
+              grep '^DB_PASSWORD=' "$DIR/.env" | tr -d '\r'
+              # Tambahkan SSLMODE dan SSL_CA hanya jika mereka ada dan tidak kosong
+              if [ -n "$(grep '^DB_SSLMODE=' "$DIR/.env")" ]; then
+                grep '^DB_SSLMODE=' "$DIR/.env" | tr -d '\r'
+              fi
+            } >> "$DIR/.env.docker"
 
 
             echo "Masuk direktori $DIR..."
-            cd $DIR
+            cd "$DIR"
 
             echo "Restart Docker Compose..."
-            docker compose down
-            # Gunakan .env untuk environment variable Docker Compose
-            # dan pastikan file docker-compose.yml yang terbaru ada di $DIR
-            # Nama service di docker-compose.yml adalah 'app', jadi kontainer akan menjadi 'laravel_app'
-            docker compose --env-file .env up -d --build
-            sleep 5 # Beri waktu lebih untuk Nginx dan PHP-FPM siap
+            docker compose down || true 
+
+            # Jalankan docker compose up dan tangkap status keluarnya
+            if ! docker compose --env-file .env.docker up -d --build; then 
+                echo "ERROR: Docker Compose gagal memulai! Memeriksa log..."
+                docker compose logs
+                exit 1 
+            fi
+
+            sleep 5 
 
             echo "Menunggu Laravel PHP-FPM container siap..."
-            sleep 2 # Biarkan Nginx dan PHP-FPM berinteraksi
-
-            # Cek apakah kontainer PHP-FPM sudah berjalan
-            if ! docker ps | grep -q $CONTAINER; then
-                echo "Kontainer $CONTAINER tidak ditemukan! Pastikan docker-compose.yml sudah benar."
-                docker compose logs $CONTAINER
+            # Cek apakah kontainer sudah berjalan dengan memeriksa ID-nya
+            if ! docker compose ps -q "$CONTAINER"; then
+                echo "ERROR: Kontainer $CONTAINER tidak ditemukan atau tidak berjalan setelah startup!"
+                docker compose logs "$CONTAINER"
                 exit 1
             fi
 
             echo "Laravel PHP-FPM container sudah berjalan. Melanjutkan instalasi Laravel..."
 
             echo "Menjalankan composer install..."
-            docker exec $CONTAINER composer install --optimize-autoloader --no-dev || { echo "Composer install gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+            docker exec "$CONTAINER" composer install --optimize-autoloader --no-dev || { echo "ERROR: Composer install gagal! Lihat log kontainer."; docker compose logs "$CONTAINER"; exit 1; }
 
             echo "Menghasilkan APP_KEY..."
-            docker exec $CONTAINER php artisan key:generate || { echo "Key generate gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+            docker exec "$CONTAINER" php artisan key:generate || { echo "ERROR: Key generate gagal! Lihat log kontainer."; docker compose logs "$CONTAINER"; exit 1; }
 
             echo "Menjalankan migrasi database..."
-            # Menjalankan migrasi, force untuk production
-            docker exec $CONTAINER php artisan migrate --force || { echo "Migrasi database gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+            docker exec "$CONTAINER" php artisan migrate --force || { echo "ERROR: Migrasi database gagal! Lihat log kontainer."; docker compose logs "$CONTAINER"; exit 1; }
 
             echo "Membuat symbolic link storage..."
-            docker exec $CONTAINER php artisan storage:link || { echo "Storage link gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+            docker exec "$CONTAINER" php artisan storage:link || { echo "ERROR: Storage link gagal! Lihat log kontainer."; docker compose logs "$CONTAINER"; exit 1; }
 
             echo "Mengoptimalkan cache Laravel..."
-            docker exec $CONTAINER php artisan config:clear
-            docker exec $CONTAINER php artisan cache:clear
-            docker exec $CONTAINER php artisan view:clear
-            docker exec $CONTAINER php artisan route:clear
-            docker exec $CONTAINER php artisan config:cache
-            docker exec $CONTAINER php artisan route:cache
-            docker exec $CONTAINER php artisan view:cache
+            docker exec "$CONTAINER" php artisan config:clear
+            docker exec "$CONTAINER" php artisan cache:clear
+            docker exec "$CONTAINER" php artisan view:clear
+            docker exec "$CONTAINER" php artisan route:clear
+            docker exec "$CONTAINER" php artisan config:cache
+            docker exec "$CONTAINER" php artisan route:cache
+            docker exec "$CONTAINER" php artisan view:cache
 
             sleep 2
             echo "jalankan npm install..."
-            docker exec $CONTAINER npm install || { echo "NPM install gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+            docker exec "$CONTAINER" npm install || { echo "ERROR: NPM install gagal! Lihat log kontainer."; docker compose logs "$CONTAINER"; exit 1; }
             echo "jalankan npm run build..."
-            docker exec $CONTAINER npm run build || { echo "NPM build gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+            docker exec "$CONTAINER" npm run build || { echo "ERROR: NPM build gagal! Lihat log kontainer."; docker compose logs "$CONTAINER"; exit 1; }
 
             echo "Selesai! Aplikasi Laravel telah dideploy."
