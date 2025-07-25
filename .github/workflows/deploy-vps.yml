@@ -140,4 +140,20 @@ jobs:
             echo "jalankan npm run build..."
              npm run build 
 
+            sleep 2
+
+            echo "applying https with certbot"
+            docker run --rm \
+            -v certbot-etc:/etc/letsencrypt \
+            -v certbot-var:/var/lib/letsencrypt \
+            -v "$(pwd)/public:/var/www/html" \
+            certbot/certbot certonly \
+            --webroot \
+            --webroot-path=/var/www/html \
+            -d technonusa.me \
+            -d www.technonusa.me \
+            --email 22552011087@utb-univ.ac.id \
+            --agree-tos \
+            --no-eff-email
+
             echo "Selesai! Aplikasi Laravel telah dideploy."
