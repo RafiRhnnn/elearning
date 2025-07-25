@@ -85,15 +85,12 @@ jobs:
             echo "Prepare installing certbot"
             docker compose stop nginx
 
-            docker compose run --rm certbot certonly --webroot --webroot-path=/var/www/certbot \
-            --email "${secrets.EMAIL}" --agree-tos --no-eff-email \
-            -d "{${secrets.APP_DOMAIN}}" -d www."{${secrets.APP_DOMAIN}}"
 
 
 
 
             echo "Restart Docker Compose..."
-            docker compose down
+            docker compose down --remove-orphans 
             # Gunakan .env untuk environment variable Docker Compose
             # dan pastikan file docker-compose.yml yang terbaru ada di $DIR
             # Nama service di docker-compose.yml adalah 'app', jadi kontainer akan menjadi 'laravel_app'
@@ -102,6 +99,9 @@ jobs:
 
             echo "Menunggu Laravel PHP-FPM container siap..."
             sleep 2 # Biarkan Nginx dan PHP-FPM berinteraksi
+            docker compose run --rm certbot certonly --webroot --webroot-path=/var/www/certbot \
+            --email "${secrets.EMAIL}" --agree-tos --no-eff-email \
+            -d "{${secrets.APP_DOMAIN}}" -d www."{${secrets.APP_DOMAIN}}"
 
             # Cek apakah kontainer PHP-FPM sudah berjalan
             if ! docker ps | grep -q $CONTAINER; then
