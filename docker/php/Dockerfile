@@ -1,11 +1,7 @@
 FROM ubuntu:22.04
 
 RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    curl \
-    gnupg2 \
-    ca-certificates \
-    lsb-release
+    software-properties-common 
 
 RUN add-apt-repository -y ppa:ondrej/php
 
@@ -21,9 +17,11 @@ RUN apt-get update && apt-get install -y \
     php8.2-curl \
     php8.2-xml \
     php8.2-bcmath \
-    php8.2-pdo \
-    nodejs \
-    npm
+    php8.2-pdo 
+
+# Install nodejs 20
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
