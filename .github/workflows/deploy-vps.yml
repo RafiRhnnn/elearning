@@ -92,23 +92,7 @@ jobs:
             docker compose --env-file .env up -d --build
             sleep 5 # Beri waktu lebih untuk Nginx dan PHP-FPM siap
 
-            # Cek apakah sertifikat sudah ada
-            if [ ! -f "/var/www/html/certbot/conf/live/technonusa.me/fullchain.pem" ]; then
-                echo "Sertifikat SSL tidak ditemukan. Memulai proses pembuatan sertifikat dengan Certbot..."
-                
-                # Hentikan Nginx sementara untuk standalone challenge atau pastikan direktori .well-known bisa diakses
-                docker compose stop nginx
 
-                # Jalankan Certbot untuk membuat sertifikat
-                docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot \
-                    -d technonusa.me -d www.technonusa.me \
-                    --email 22552011087@utb-univ.ac.id --agree-tos --no-eff-email --force-renewal
-
-                # Jalankan kembali semua service
-                docker compose up -d --remove-orphans
-            else
-                echo "Sertifikat SSL sudah ada."
-            fi
 
             echo "Menunggu Laravel PHP-FPM container siap..."
             sleep 2 # Biarkan Nginx dan PHP-FPM berinteraksi
@@ -151,5 +135,74 @@ jobs:
             echo "jalankan npm run build..."
              npm run build 
 
+            echo "Proses installasi cerbot di container laravel_nginx..."
+            docker exec laravel_nginx certbot --nginx --non-interactive --agree-tos --email 22552011087@utb-univ.ac.id -d technonusa.me -d www.technonusa.me
+
+            echo "Ubah isi nginx.conf untuk mengarahkan ke HTTPS..."
+            docker exec laravel_nginx sh -c 'cat > /etc/nginx/conf.d/default.conf << "EOF"
+            server {
+              listen 80;
+              listen [::]:80;
+              server_name technonusa.me www.technonusa.me;
+
+              # Lokasi untuk validasi Certbot
+              location /.well-known/acme-challenge/ {
+                root /var/www/certbot;
+              }
+
+              # Redirect semua traffic HTTP ke HTTPS
+              location / {
+                return 301 https://$host$request_uri;
+              }
+            }
+
+            server {
+              listen 443 ssl http2;
+              listen [::]:443 ssl http2;
+              server_name technonusa.me www.technonusa.me;
+              # ROOT PATH: Pastikan ini sesuai dengan lokasi folder public Laravel kamu di dalam kontainer Nginx
+              root /var/www/html/public; 
+
+              index index.php index.html index.htm;
+
+              # Sertifikat SSL yang dipasang oleh Certbot
+              ssl_certificate /etc/letsencrypt/live/technonusa.me/fullchain.pem; # managed by Certbot
+              ssl_certificate_key /etc/letsencrypt/live/technonusa.me/privkey.pem; # managed by Certbot
+              include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+              ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+              # Konfigurasi untuk penanganan URL Laravel (routing)
+              location / {
+                try_files $uri $uri/ /index.php?$query_string;
+              }
+
+              # Konfigurasi untuk memproses file PHP menggunakan PHP-FPM
+              location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                # PENTING: Gunakan nama service PHP-FPM dari docker-compose.yml kamu
+                # "laravel_php_fpm" adalah nama service kontainer PHP-FPM kamu
+                fastcgi_pass laravel_php_fpm:9000; 
+                fastcgi_index index.php;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_param PATH_INFO $fastcgi_path_info;
+              }
+
+              # Mengamankan file sensitif
+              location ~ /\.env {
+                deny all;
+              }
+
+              location ~ /\. {
+                deny all;
+                access_log off;
+                log_not_found off;
+              }
+            }
+            EOF'
+
+            echo "Restart nginx untuk menerapkan konfigurasi SSL..."
+            docker exec laravel_nginx nginx -s reload
 
             echo "Selesai! Aplikasi Laravel telah dideploy."
