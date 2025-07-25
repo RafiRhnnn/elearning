@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
         pdo_mysql \
         mbstring \
         bcmath \
-        fileinfo \
         openssl \
         zip \
         json \
