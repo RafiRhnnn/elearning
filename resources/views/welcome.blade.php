@@ -22,7 +22,7 @@
                     <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-12 w-12">
                     <div>
                         <h1 class="text-xl font-bold text-green-700">E-Learning SMA</h1>
-                        <p class="text-sm text-gray-600">SMA Negeri Terbaik</p>
+                        <p class="text-sm text-gray-600">SMA Negeri Terbaik Seindonesia</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -82,11 +82,11 @@
                 <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-24 w-24 mx-auto mb-6 bounce-in">
                 <h1 class="text-5xl font-bold mb-6 fade-in-up">
                     Selamat Datang di <br>
-                    <span class="text-yellow-300 wave-animation inline-block">E-Learning SMA Negeri</span>
+                    <span class="text-yellow-300 wave-animation inline-block">E-Learning Technonusa</span>
                 </h1>
                 <div class="mb-8">
                     <p class="text-xl typing-effect mx-auto" style="width: fit-content;">
-                        Platform pembelajaran digital untuk generasi masa depan
+                        Platform pembelajaran digital untuk generasi cemas
                     </p>
                 </div>
                 <div class="flex flex-col md:flex-row gap-4 justify-center fade-in-up" style="animation-delay: 2s;">
