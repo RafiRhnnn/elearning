@@ -1,6 +1,5 @@
-FROM php:8.2-fpm
+FROM ubuntu:22.04
 
-# Install tools dasar + add-apt-repository
 RUN apt-get update && apt-get install -y \
     software-properties-common \
     curl \
@@ -8,10 +7,8 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     lsb-release
 
-# Tambah PPA ondrej/php
 RUN add-apt-repository -y ppa:ondrej/php
 
-# Update & install PHP + extensions
 RUN apt-get update && apt-get install -y \
     php8.2 \
     php8.2-cli \
@@ -24,24 +21,21 @@ RUN apt-get update && apt-get install -y \
     php8.2-curl \
     php8.2-xml \
     php8.2-bcmath \
-    php8.2-pdo
+    php8.2-pdo \
+    nodejs \
+    npm
 
-# Copy composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install Node.js 20 dan npm
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g npm
+RUN mkdir -p /run/php && chown www-data:www-data /run/php
 
-# Copy script init
+RUN echo "[global]\ndaemonize = no\n[www]\nlisten = 0.0.0.0:9000\n" > /etc/php/8.2/fpm/pool.d/zz-docker.conf
+
+WORKDIR /var/www/html
 COPY docker/php/init.sh /usr/local/bin/init.sh
 RUN chmod +x /usr/local/bin/init.sh
 
-# Set user www-data (opsional)
-RUN usermod -u 1000 www-data
-RUN groupmod -g 1000 www-data
-RUN mkdir -p /run/php && chown www-data:www-data /run/php
-RUN echo "[global]\ndaemonize = no\n[www]\nlisten = 0.0.0.0:9000\n" > /etc/php/8.2/fpm/pool.d/zz-docker.conf
+RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+
 EXPOSE 9000
 ENTRYPOINT ["/usr/local/bin/init.sh"]

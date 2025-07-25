@@ -82,6 +82,15 @@ jobs:
               exit 1
             fi
 
+            echo "Prepare installing certbot"
+            docker compose stop nginx
+
+            docker compose run --rm certbot certonly --webroot --webroot-path=/var/www/certbot \
+            --email "${secrets.EMAIL}" --agree-tos --no-eff-email \
+            -d "{${secrets.APP_DOMAIN}}" -d www."{${secrets.APP_DOMAIN}}"
+
+
+
 
             echo "Restart Docker Compose..."
             docker compose down
