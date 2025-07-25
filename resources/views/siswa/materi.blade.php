@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Materi - Siswa</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon.ico') }}">
+    <!-- Jika ingin PNG: <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}"> -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
