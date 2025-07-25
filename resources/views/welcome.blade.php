@@ -82,7 +82,7 @@
                 <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-24 w-24 mx-auto mb-6 bounce-in">
                 <h1 class="text-5xl font-bold mb-6 fade-in-up">
                     Selamat Datang di <br>
-                    <span class="text-yellow-300 wave-animation inline-block">E-Learning SMA Negeri</span>
+                    <span class="text-yellow-300 wave-animation inline-block">E-Learning Technonusa</span>
                 </h1>
                 <div class="mb-8">
                     <p class="text-xl typing-effect mx-auto" style="width: fit-content;">
