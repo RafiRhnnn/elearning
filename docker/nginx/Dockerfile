@@ -1,9 +1,9 @@
-# Gunakan base image Nginx resmi
 FROM nginx:latest
 
-# Hapus default konfigurasi Nginx
 RUN apt update
-RUN install certbot python3-certbot-nginx -y
+# Hapus default konfigurasi Nginx
+RUN apt install certbot python3-certbot-nginx
+
 
 # Ekspos port Nginx
 EXPOSE 80
