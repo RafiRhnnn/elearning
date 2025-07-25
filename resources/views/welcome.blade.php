@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>E-Learning Platform - SMA Negeri</title>
+    <title>E-Learning technonusa - SMA Negeri</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -19,10 +19,10 @@
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-3">
-                    <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-12 w-12">
+                    <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-15 w-24">
                     <div>
-                        <h1 class="text-xl font-bold text-green-700">E-Learning SMA</h1>
-                        <p class="text-sm text-gray-600">SMA Negeri Terbaik Seindonesia</p>
+                        <h1 class="text-xl font-bold text-green-700">TechnoNusa</h1>
+                        <p class="text-sm text-gray-600">E-Learning SMA Negeri Terbaik</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -45,13 +45,10 @@
                                 </a>
                             @endif
                         @else
-                            <a href="{{ route('login') }}" class="text-green-600 hover:text-green-700 font-medium">
+                            <a href="{{ route('login') }}" class="text-green-600 hover:text-blue-700 font-medium">
                                 <i class="fas fa-sign-in-alt mr-1"></i>Masuk
                             </a>
-                            <a href="{{ route('register') }}"
-                                class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300">
-                                <i class="fas fa-user-plus mr-1"></i>Daftar
-                            </a>
+
                         @endauth
                     @endif
                 </div>
@@ -79,20 +76,20 @@
 
         <div class="container mx-auto px-4 text-center relative z-10">
             <div class="max-w-4xl mx-auto">
-                <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-24 w-24 mx-auto mb-6 bounce-in">
+                <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-36 w-30 mx-auto mb-6 bounce-in">
                 <h1 class="text-5xl font-bold mb-6 fade-in-up">
                     Selamat Datang di <br>
-                    <span class="text-yellow-300 wave-animation inline-block">E-Learning Technonusa</span>
+                    <span class="text-yellow-300 wave-animation inline-block">E-Learning TechnoNusa</span>
                 </h1>
                 <div class="mb-8">
                     <p class="text-xl typing-effect mx-auto" style="width: fit-content;">
-                        Platform pembelajaran digital untuk generasi cemas
+                        Platform pembelajaran digital untuk generasi masa depan
                     </p>
                 </div>
                 <div class="flex flex-col md:flex-row gap-4 justify-center fade-in-up" style="animation-delay: 2s;">
-                    <a href="{{ route('register') }}"
+                    <a href="{{ route('login') }}"
                         class="bg-yellow-500 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-400 transition duration-300 transform hover:scale-105 hover:shadow-2xl">
-                        <i class="fas fa-rocket mr-2 pulse-icon"></i>Mulai Belajar nanti aja
+                        <i class="fas fa-rocket mr-2 pulse-icon"></i>Mulai Belajar Sekarang
                     </a>
                     <a href="#features"
                         class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition duration-300 transform hover:scale-105">
@@ -202,7 +199,7 @@
     </section>
 
     <!-- About Section -->
-    <section class="py-16 bg-white">
+    <section id="about" class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div data-aos="slide-right" data-aos-duration="1000">
@@ -248,10 +245,6 @@
                 Bergabunglah dengan ratusan siswa yang telah merasakan pengalaman belajar yang lebih baik dengan
                 platform e-learning kami.
             </p>
-            <a href="{{ route('register') }}"
-                class="bg-yellow-500 text-gray-900 px-10 py-4 rounded-lg font-bold text-lg hover:bg-yellow-400 transition duration-300 transform hover:scale-105">
-                <i class="fas fa-graduation-cap mr-2"></i>Daftar Sekarang Gratis
-            </a>
         </div>
     </section>
 
@@ -260,17 +253,19 @@
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="col-span-1 md:col-span-2">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-10 w-10">
+                    <div class="flex items-center mb-4">
+                        <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-20 w-25">
                         <div>
-                            <h3 class="text-xl font-bold">E-Learning SMA</h3>
-                            <p class="text-gray-400">SMA Negeri Terbaik</p>
+                            <h3 class="text-xl font-bold leading-tight">TechnoNusa</h3>
+                            <p class="text-gray-400 text-sm leading-none">E-Learning SMA Negeri Terbaik</p>
                         </div>
                     </div>
                     <p class="text-gray-400 mb-4">
                         Platform pembelajaran digital yang menghubungkan siswa, guru, dan ilmu pengetahuan
-                        dalam satu ekosistem pembelajaran SMA yang modern dan efektif.
+                        dalam satu ekosistem pembelajaran technonusa yang modern dan efektif.
                     </p>
+
+
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-400 hover:text-white transition duration-300">
                             <i class="fab fa-facebook-f text-xl"></i>
@@ -288,24 +283,28 @@
                 </div>
 
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <h4 class="text-lg font-semibold mb-4">Informasi</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Tentang
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition duration-300">Tentang
                                 Sekolah</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Program
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition duration-300">Program
                                 Jurusan</a></li>
+                        <li><a href="#about"
+                                class="text-gray-400 hover:text-white transition duration-300">Akreditasi</a></li>
                         <li><a href="#"
                                 class="text-gray-400 hover:text-white transition duration-300">Berita</a></li>
-                        <li><a href="#"
-                                class="text-gray-400 hover:text-white transition duration-300">Kontak</a></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Kontak</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li><i class="fas fa-map-marker-alt mr-2"></i>Jl. Pendidikan No. 123, Kota</li>
-                        <li><i class="fas fa-phone mr-2"></i>+62 21 1234567</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>Jl. Cikajang 3 No.09 Bandung 40291
+                        </li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>Jl. Raya Soreang-Cipatik No.91
+                            Bandung 40912
+                        </li>
+                        <li><i class="fab fa-whatsapp mr-2"></i>+62 813 9970 5979 / +62 857 0014 1922</li>
                         <li><i class="fas fa-envelope mr-2"></i>info@smanegeri.sch.id</li>
                         <li><i class="fas fa-globe mr-2"></i>www.smanegeri.sch.id</li>
                     </ul>
@@ -314,7 +313,8 @@
 
             <div class="border-t border-gray-700 mt-8 pt-8 text-center">
                 <p class="text-gray-400">
-                    &copy; {{ date('Y') }} E-Learning SMA Negeri. All rights reserved.
+                    &copy; {{ date('Y') }} Kelompok 9. Moch Ikhsan Futra-22552011086 | Muhammad Rafi
+                    Raihan-22552011233 | Pedrik Dendi Aparel-24552012016
                 </p>
             </div>
         </div>
