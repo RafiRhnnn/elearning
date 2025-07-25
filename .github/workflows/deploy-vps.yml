@@ -23,47 +23,47 @@ jobs:
           script: |
             REPO="https://github.com/RafiRhnnn/elearning.git"
             DIR="${{ secrets.VPS_PATH }}"
-            CONTAINER="laravel_app" # Nama kontainer sesuai docker-compose.yml
+            CONTAINER="laravel_php_fpm" 
             BRANCH="production"
 
             echo "Cek git..."
             if ! command -v git &>/dev/null; then
-              echo "Install git..."
-              sudo apt-get update && sudo apt-get install -y git
+                echo "Install git..."
+                sudo apt-get update && sudo apt-get install -y git
             fi
 
             echo "Cek docker..."
             if ! command -v docker &>/dev/null; then
-              echo "Install docker..."
-              curl -fsSL https://get.docker.com | sh
-              sudo usermod -aG docker $USER || true # Tambahkan || true agar tidak gagal jika user sudah di grup
+                echo "Install docker..."
+                curl -fsSL https://get.docker.com | sh
+                sudo usermod -aG docker $USER || true # Tambahkan || true agar tidak gagal jika user sudah di grup
             fi
 
             echo "Cek docker compose..."
             if ! docker compose version &>/dev/null; then
-              echo "Install docker compose plugin..."
-              mkdir -p ~/.docker/cli-plugins
-              curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
-                -o ~/.docker/cli-plugins/docker-compose
-              chmod +x ~/.docker/cli-plugins/docker-compose
+                echo "Install docker compose plugin..."
+                mkdir -p ~/.docker/cli-plugins
+                curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+                    -o ~/.docker/cli-plugins/docker-compose
+                chmod +x ~/.docker/cli-plugins/docker-compose
             fi
 
             echo "Cek nodejs 20..."
             if ! command -v node &>/dev/null || ! node -v | grep -q "v20"; then
-              echo "Install Node.js 20..."
-              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-              sudo apt-get install -y nodejs
+                echo "Install Node.js 20..."
+                curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+                sudo apt-get install -y nodejs
             fi
 
             echo "Clone atau pull repo..."
             if [ ! -d "$DIR/.git" ]; then
-              echo "Clone repo ke $DIR..."
-              git clone --branch $BRANCH $REPO $DIR
+                echo "Clone repo ke $DIR..."
+                git clone --branch $BRANCH $REPO $DIR
             else
-              echo "Pull update di $DIR..."
-              cd $DIR
-              git fetch
-              git pull origin $BRANCH
+                echo "Pull update di $DIR..."
+                cd $DIR
+                git fetch
+                git pull origin $BRANCH
             fi
 
             echo "Menyimpan .env untuk Laravel (dari GitHub Secret LARAVEL_ENV)..."
@@ -72,17 +72,14 @@ jobs:
             # Pastikan secret LARAVEL_ENV berisi seluruh konten file .env Anda
             echo "${{ secrets.LARAVEL_ENV }}" > "$DIR/.env"
 
-            echo "Menyiapkan environment variables untuk Docker Compose (.env.deploy)..."
-            # copy semua isi dari .env ke .env.deploy
-            rm -f "$DIR/.env.deploy" 
-            cp "$DIR/.env" "$DIR/.env.deploy"
+
             # Tambahkan DB_SSLMODE dan DB_SSL_CA jika Anda menggunakannya
             # Pastikan secrets ini ada di GitHub Actions
             if [ -n "${{ secrets.DB_SSLMODE }}" ]; then
-              echo "DB_SSLMODE=${{ secrets.DB_SSLMODE }}" >> "$DIR/.env.deploy"
+                echo "DB_SSLMODE=${{ secrets.DB_SSLMODE }}" >> "$DIR/.env"
             fi
             if [ -n "${{ secrets.DB_SSL_CA }}" ]; then
-              echo "DB_SSL_CA=${{ secrets.DB_SSL_CA }}" >> "$DIR/.env.deploy"
+                echo "DB_SSL_CA=${{ secrets.DB_SSL_CA }}" >> "$DIR/.env"
             fi
 
 
@@ -91,22 +88,23 @@ jobs:
 
             echo "Restart Docker Compose..."
             docker compose down
-            # Gunakan .env.deploy untuk environment variable Docker Compose
+            # Gunakan .env untuk environment variable Docker Compose
             # dan pastikan file docker-compose.yml yang terbaru ada di $DIR
             # Nama service di docker-compose.yml adalah 'app', jadi kontainer akan menjadi 'laravel_app'
             docker compose --env-file .env up -d --build
-            sleep 2
-            echo "Menunggu Laravel container siap (Apache running)..."
-            sleep 2
+            sleep 5 # Beri waktu lebih untuk Nginx dan PHP-FPM siap
 
-            # Cek apakah kontainer sudah berjalan
+            echo "Menunggu Laravel PHP-FPM container siap..."
+            sleep 2 # Biarkan Nginx dan PHP-FPM berinteraksi
+
+            # Cek apakah kontainer PHP-FPM sudah berjalan
             if ! docker ps | grep -q $CONTAINER; then
-              echo "Kontainer $CONTAINER tidak ditemukan! Pastikan docker-compose.yml sudah benar."
-              docker compose logs $CONTAINER
-              exit 1
+                echo "Kontainer $CONTAINER tidak ditemukan! Pastikan docker-compose.yml sudah benar."
+                docker compose logs $CONTAINER
+                exit 1
             fi
 
-            echo "Laravel container sudah berjalan. Melanjutkan instalasi Laravel..."
+            echo "Laravel PHP-FPM container sudah berjalan. Melanjutkan instalasi Laravel..."
 
             echo "Menjalankan composer install..."
             docker exec $CONTAINER composer install --optimize-autoloader --no-dev || { echo "Composer install gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
@@ -129,5 +127,11 @@ jobs:
             docker exec $CONTAINER php artisan config:cache
             docker exec $CONTAINER php artisan route:cache
             docker exec $CONTAINER php artisan view:cache
+
+            sleep 2
+            echo "jalankan npm install..."
+            docker exec $CONTAINER npm install || { echo "NPM install gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+            echo "jalankan npm run build..."
+            docker exec $CONTAINER npm run build || { echo "NPM build gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
 
             echo "Selesai! Aplikasi Laravel telah dideploy."

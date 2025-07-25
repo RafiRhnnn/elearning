@@ -1,9 +1,8 @@
 #!/bin/bash
-set -x  # Tambah ini agar semua perintah di-log saat dijalankan
-
-
+set -x # Tambah ini agar semua perintah di-log saat dijalankan
 
 # atur kepemilikan dan hak akses direktori
+# Pastikan www-data memiliki akses yang benar
 chown -R www-data:www-data /var/www/html
 echo "Mengatur hak akses direktori storage dan bootstrap/cache..."
 # Buat folder dan file log jika belum ada
@@ -30,8 +29,9 @@ echo "Menjalankan optimisasi Laravel..."
 composer validate --strict
 composer install --optimize-autoloader --no-dev
 
-# Migrate database jika ada yang perlu 
+# Migrate database jika ada yang perlu
 php artisan migrate
+
 # Jalankan perintah artisan sesuai environment
 if [ "$APP_ENV" = "production" ]; then
     echo "install npm dependencies"
@@ -46,8 +46,6 @@ if [ "$APP_ENV" = "production" ]; then
     php artisan view:clear
     php artisan route:clear
 
-
-
     php artisan config:cache
     php artisan route:cache
     php artisan view:cache
@@ -59,5 +57,5 @@ else
     php artisan route:clear
 fi
 
-# Jalankan Apache agar container tetap aktif
-exec apache2-foreground
+# Jalankan PHP-FPM agar container tetap aktif
+exec php-fpm
