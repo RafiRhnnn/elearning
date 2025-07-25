@@ -58,4 +58,4 @@ else
 fi
 
 # Jalankan PHP-FPM agar container tetap aktif
-exec php-fpm
+exec php-fpm8.2

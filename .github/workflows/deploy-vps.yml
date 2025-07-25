@@ -23,7 +23,7 @@ jobs:
           script: |
             REPO="https://github.com/RafiRhnnn/elearning.git"
             DIR="${{ secrets.VPS_PATH }}"
-            CONTAINER="laravel_php" 
+            CONTAINER="laravel_php_fpm" 
             BRANCH="production"
 
             echo "Cek git..."
