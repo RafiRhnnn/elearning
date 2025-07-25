@@ -41,6 +41,7 @@ RUN chmod +x /usr/local/bin/init.sh
 # Set user www-data (opsional)
 RUN usermod -u 1000 www-data
 RUN groupmod -g 1000 www-data
-
+RUN mkdir -p /run/php && chown www-data:www-data /run/php
+RUN echo "[global]\ndaemonize = no\n[www]\nlisten = 0.0.0.0:9000\n" > /etc/php/8.2/fpm/pool.d/zz-docker.conf
 EXPOSE 9000
 ENTRYPOINT ["/usr/local/bin/init.sh"]
