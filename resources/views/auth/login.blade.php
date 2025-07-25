@@ -34,9 +34,9 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
-                <!-- Username -->
+                <!-- Email -->
                 <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-gray-700">Username</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                     <input type="text" id="email" name="email" value="{{ old('email') }}" required autofocus
                         class="mt-1 block w-full rounded-md bg-blue-50 border-gray-300 shadow-sm focus:ring focus:ring-blue-300 focus:outline-none">
                     @error('email')
