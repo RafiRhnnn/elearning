@@ -1,0 +1,208 @@
+name: Deploy Laravel to VPS
+
+on:
+  push:
+    branches:
+      - "production"
+
+jobs:
+  deploy:
+    name: CI/CD to VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            REPO="https://github.com/RafiRhnnn/elearning.git"
+            DIR="/var/www/html"
+            CONTAINER="laravel_php_fpm" 
+            BRANCH="production"
+            export APP_DOMAIN="${{ secrets.APP_DOMAIN }}"
+            export EMAIL="${{ secrets.EMAIL }}"
+            export LARAVEL_ENV="${{ secrets.LARAVEL_ENV }}"
+
+            echo "Cek git..."
+            if ! command -v git &>/dev/null; then
+                echo "Install git.."
+                sudo apt-get update && sudo apt-get install -y git
+            fi
+
+            echo "Cek docker..."
+            if ! command -v docker &>/dev/null; then
+                echo "Install docker..."
+                curl -fsSL https://get.docker.com | sh
+                sudo usermod -aG docker $USER || true # Tambahkan || true agar tidak gagal jika user sudah di grup
+            fi
+
+            echo "Cek docker compose..."
+            if ! docker compose version &>/dev/null; then
+                echo "Install docker compose plugin..."
+                mkdir -p ~/.docker/cli-plugins
+                curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+                    -o ~/.docker/cli-plugins/docker-compose
+                chmod +x ~/.docker/cli-plugins/docker-compose
+            fi
+
+            echo "Cek nodejs 20..."
+            if ! command -v node &>/dev/null || ! node -v | grep -q "v20"; then
+                echo "Install Node.js 20..."
+                curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+                sudo apt-get install -y nodejs
+            fi
+
+            echo "Clone atau pull repo..."
+            if [ ! -d "$DIR/.git" ]; then
+                echo "Clone repo ke $DIR..."
+                git clone --branch $BRANCH $REPO $DIR
+            else
+                echo "Pull update di $DIR..."
+                cd $DIR
+                git fetch
+                git pull origin $BRANCH
+            fi
+
+            echo "Menyimpan .env untuk Laravel (dari GitHub Secret LARAVEL_ENV)..."
+            mkdir -p "$DIR"
+
+
+
+            echo "Masuk direktori $DIR..."
+            cd $DIR
+            touch .env 
+            if [ ! -f "$DIR/.env" ]; then
+              echo "File .env tidak ditemukan. Gagal melanjutkan."
+              exit 1
+            fi
+            # Pastikan secret LARAVEL_ENV berisi seluruh konten file .env Anda
+            echo "$LARAVEL_ENV" > "$DIR/.env"
+
+            echo "Restart Docker Compose..."
+            docker compose down --remove-orphans 
+            # Gunakan .env untuk environment variable Docker Compose
+            # dan pastikan file docker-compose.yml yang terbaru ada di $DIR
+            # Nama service di docker-compose.yml adalah 'app', jadi kontainer akan menjadi 'laravel_app'
+            docker compose --env-file .env up -d --build
+            sleep 5 # Beri waktu lebih untuk Nginx dan PHP-FPM siap
+
+
+
+            echo "Menunggu Laravel PHP-FPM container siap..."
+            sleep 2 # Biarkan Nginx dan PHP-FPM berinteraksi
+
+            # Cek apakah kontainer PHP-FPM sudah berjalan
+            if ! docker ps | grep -q $CONTAINER; then
+                echo "Kontainer $CONTAINER tidak ditemukan! Pastikan docker-compose.yml sudah benar."
+                docker compose logs $CONTAINER
+                exit 1
+            fi
+
+            echo "Laravel PHP-FPM container sudah berjalan. Melanjutkan instalasi Laravel..."
+
+            echo "Menjalankan composer install..."
+            docker exec $CONTAINER composer install --optimize-autoloader --no-dev || { echo "Composer install gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+
+            echo "Menghasilkan APP_KEY..."
+            docker exec $CONTAINER php artisan key:generate || { echo "Key generate gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+
+            echo "Menjalankan migrasi database..."
+            # Menjalankan migrasi, force untuk production
+            docker exec $CONTAINER php artisan migrate --force || { echo "Migrasi database gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+
+            echo "Membuat symbolic link storage..."
+            docker exec $CONTAINER php artisan storage:link || { echo "Storage link gagal! Lihat log kontainer."; docker compose logs $CONTAINER; exit 1; }
+
+            echo "Mengoptimalkan cache Laravel..."
+            docker exec $CONTAINER php artisan config:clear
+            docker exec $CONTAINER php artisan cache:clear
+            docker exec $CONTAINER php artisan view:clear
+            docker exec $CONTAINER php artisan route:clear
+            docker exec $CONTAINER php artisan config:cache
+            docker exec $CONTAINER php artisan route:cache
+            docker exec $CONTAINER php artisan view:cache
+
+            sleep 2
+            echo "jalankan npm install..."
+             npm install
+
+            echo "jalankan npm run build..."
+             npm run build 
+
+            echo "Proses installasi cerbot di container laravel_nginx..."
+            docker exec laravel_nginx certbot --nginx --non-interactive --agree-tos --email 22552011087@utb-univ.ac.id -d technonusa.me -d www.technonusa.me
+
+            echo "Ubah isi nginx.conf untuk mengarahkan ke HTTPS..."
+            docker exec laravel_nginx sh -c 'cat > /etc/nginx/conf.d/default.conf << "EOF"
+            server {
+              listen 80;
+              listen [::]:80;
+              server_name technonusa.me www.technonusa.me;
+
+              # Lokasi untuk validasi Certbot
+              location /.well-known/acme-challenge/ {
+                root /var/www/certbot;
+              }
+
+              # Redirect semua traffic HTTP ke HTTPS
+              location / {
+                return 301 https://$host$request_uri;
+              }
+            }
+
+            server {
+              listen 443 ssl http2;
+              listen [::]:443 ssl http2;
+              server_name technonusa.me www.technonusa.me;
+              # ROOT PATH: Pastikan ini sesuai dengan lokasi folder public Laravel kamu di dalam kontainer Nginx
+              root /var/www/html/public; 
+
+              index index.php index.html index.htm;
+
+              # Sertifikat SSL yang dipasang oleh Certbot
+              ssl_certificate /etc/letsencrypt/live/technonusa.me/fullchain.pem; # managed by Certbot
+              ssl_certificate_key /etc/letsencrypt/live/technonusa.me/privkey.pem; # managed by Certbot
+              include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+              ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+              # Konfigurasi untuk penanganan URL Laravel (routing)
+              location / {
+                try_files $uri $uri/ /index.php?$query_string;
+              }
+
+              # Konfigurasi untuk memproses file PHP menggunakan PHP-FPM
+              location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                # PENTING: Gunakan nama service PHP-FPM dari docker-compose.yml kamu
+                # "laravel_php_fpm" adalah nama service kontainer PHP-FPM kamu
+                fastcgi_pass laravel_php_fpm:9000; 
+                fastcgi_index index.php;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_param PATH_INFO $fastcgi_path_info;
+              }
+
+              # Mengamankan file sensitif
+              location ~ /\.env {
+                deny all;
+              }
+
+              location ~ /\. {
+                deny all;
+                access_log off;
+                log_not_found off;
+              }
+            }
+            EOF'
+
+            echo "Restart nginx untuk menerapkan konfigurasi SSL..."
+            docker exec laravel_nginx nginx -s reload
+
+            echo "Selesai! Aplikasi Laravel telah dideploy."
