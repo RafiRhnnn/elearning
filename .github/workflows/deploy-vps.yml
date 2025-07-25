@@ -73,15 +73,6 @@ jobs:
             echo "${{ secrets.LARAVEL_ENV }}" > "$DIR/.env"
 
 
-            # Tambahkan DB_SSLMODE dan DB_SSL_CA jika Anda menggunakannya
-            # Pastikan secrets ini ada di GitHub Actions
-            if [ -n "${{ secrets.DB_SSLMODE }}" ]; then
-                echo "DB_SSLMODE=${{ secrets.DB_SSLMODE }}" >> "$DIR/.env"
-            fi
-            if [ -n "${{ secrets.DB_SSL_CA }}" ]; then
-                echo "DB_SSL_CA=${{ secrets.DB_SSL_CA }}" >> "$DIR/.env"
-            fi
-
 
             echo "Masuk direktori $DIR..."
             cd $DIR
