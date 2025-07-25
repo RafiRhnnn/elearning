@@ -86,7 +86,7 @@
                 </h1>
                 <div class="mb-8">
                     <p class="text-xl typing-effect mx-auto" style="width: fit-content;">
-                        Platform pembelajaran digital untuk generasi masa depan
+                        Platform pembelajaran digital untuk generasi cemas
                     </p>
                 </div>
                 <div class="flex flex-col md:flex-row gap-4 justify-center fade-in-up" style="animation-delay: 2s;">
