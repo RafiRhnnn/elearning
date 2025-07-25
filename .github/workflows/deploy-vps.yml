@@ -135,9 +135,9 @@ jobs:
 
             sleep 2
             echo "jalankan npm install..."
-            docker exec -w "$DIR" "$CONTAINER" npm install
+             npm install
 
             echo "jalankan npm run build..."
-            docker exec -w "$DIR" "$CONTAINER" npm run build 
+             npm run build 
 
             echo "Selesai! Aplikasi Laravel telah dideploy."
