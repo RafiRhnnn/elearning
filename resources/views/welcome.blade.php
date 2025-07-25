@@ -92,7 +92,7 @@
                 <div class="flex flex-col md:flex-row gap-4 justify-center fade-in-up" style="animation-delay: 2s;">
                     <a href="{{ route('register') }}"
                         class="bg-yellow-500 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-400 transition duration-300 transform hover:scale-105 hover:shadow-2xl">
-                        <i class="fas fa-rocket mr-2 pulse-icon"></i>Mulai Belajar Sekarang
+                        <i class="fas fa-rocket mr-2 pulse-icon"></i>Mulai Belajar nanti aja
                     </a>
                     <a href="#features"
                         class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition duration-300 transform hover:scale-105">
