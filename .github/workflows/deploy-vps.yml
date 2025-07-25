@@ -31,7 +31,7 @@ jobs:
 
             echo "Cek git..."
             if ! command -v git &>/dev/null; then
-                echo "Install git..."
+                echo "Install git.."
                 sudo apt-get update && sudo apt-get install -y git
             fi
 
