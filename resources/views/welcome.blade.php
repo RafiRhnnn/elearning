@@ -21,13 +21,8 @@
                 <div class="flex items-center space-x-3">
                     <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-15 w-24">
                     <div>
-<<<<<<< HEAD
                         <h1 class="text-xl font-bold text-green-700">TechnoNusa</h1>
                         <p class="text-sm text-gray-600">E-Learning SMA Negeri Terbaik</p>
-=======
-                        <h1 class="text-xl font-bold text-green-700">E-Learning SMA</h1>
-                        <p class="text-sm text-gray-600">SMA Negeri Terbaik Seindonesia</p>
->>>>>>> f61eaff3dbb3c2f18ca5d55c44766ff4c4b466d1
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -84,21 +79,17 @@
                 <img src="{{ asset('img/logo.png') }}" alt="Logo Sekolah" class="h-36 w-30 mx-auto mb-6 bounce-in">
                 <h1 class="text-5xl font-bold mb-6 fade-in-up">
                     Selamat Datang di <br>
-<<<<<<< HEAD
                     <span class="text-yellow-300 wave-animation inline-block">E-Learning TechnoNusa</span>
-=======
-                    <span class="text-yellow-300 wave-animation inline-block">E-Learning Technonusa</span>
->>>>>>> f61eaff3dbb3c2f18ca5d55c44766ff4c4b466d1
                 </h1>
                 <div class="mb-8">
                     <p class="text-xl typing-effect mx-auto" style="width: fit-content;">
-                        Platform pembelajaran digital untuk generasi cemas
+                        Platform pembelajaran digital untuk generasi masa depan
                     </p>
                 </div>
                 <div class="flex flex-col md:flex-row gap-4 justify-center fade-in-up" style="animation-delay: 2s;">
                     <a href="{{ route('login') }}"
                         class="bg-yellow-500 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-400 transition duration-300 transform hover:scale-105 hover:shadow-2xl">
-                        <i class="fas fa-rocket mr-2 pulse-icon"></i>Mulai Belajar nanti aja
+                        <i class="fas fa-rocket mr-2 pulse-icon"></i>Mulai Belajar Sekarang
                     </a>
                     <a href="#features"
                         class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition duration-300 transform hover:scale-105">
