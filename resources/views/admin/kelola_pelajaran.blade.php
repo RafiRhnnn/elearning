@@ -11,7 +11,7 @@
 <body class="flex min-h-screen bg-gray-100">
     @include('admin.sidebar')
 
-    <main class="flex-1 p-4 sm:p-6 sm:ml-0">
+    <main class="flex-1 p-4 sm:p-6 pt-16 sm:pt-6 sm:ml-0">
         <div class="max-w-full mx-auto bg-white p-4 sm:p-6 rounded shadow">
             <h2 class="text-xl sm:text-2xl font-bold mb-4">Kelola Data Pelajaran</h2>
 
