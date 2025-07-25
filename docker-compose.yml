@@ -1,5 +1,5 @@
 services:
-    laravel_php:
+    laravel_php_fpm:
         build:
             context: .
             dockerfile: docker/php/Dockerfile

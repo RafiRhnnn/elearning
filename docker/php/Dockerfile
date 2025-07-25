@@ -1,12 +1,7 @@
 # Gunakan base image PHP-FPM
 FROM ubuntu:22.04
 
-# Install dependensi yang dibutuhkan
-RUN apt-get update && apt-get install -y \
-    zip unzip git curl libpng-dev libonig-dev libxml2-dev \
-    libfreetype6-dev libjpeg62-turbo-dev libzip-dev \
-    libicu-dev libcurl4-openssl-dev pkg-config libssl-dev \
-    && rm -rf /var/lib/apt/lists/* 
+
 
 RUN add-apt-repository -y ppa:ondrej/php
 RUN apt update
