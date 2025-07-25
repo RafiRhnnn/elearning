@@ -102,9 +102,6 @@ jobs:
 
             echo "Menunggu Laravel PHP-FPM container siap..."
             sleep 2 # Biarkan Nginx dan PHP-FPM berinteraksi
-            docker compose run --rm certbot certonly --webroot --webroot-path=/var/www/certbot \
-            --email "$EMAIL" --agree-tos --no-eff-email \
-            -d "$APP_DOMAIN" -d www."$APP_DOMAIN"
 
             # Cek apakah kontainer PHP-FPM sudah berjalan
             if ! docker ps | grep -q $CONTAINER; then
