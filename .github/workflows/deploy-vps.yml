@@ -22,7 +22,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             REPO="https://github.com/RafiRhnnn/elearning.git"
-            DIR="${{ secrets.VPS_PATH }}"
+            DIR="/var/www/html"
             CONTAINER="laravel_php_fpm" 
             BRANCH="production"
             export APP_DOMAIN="${{ secrets.APP_DOMAIN }}"
