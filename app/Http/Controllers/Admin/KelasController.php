@@ -29,9 +29,7 @@ class KelasController extends Controller
 
     public function kelolaKelas()
     {
-        $kelas = \App\Models\Kelas::withCount(['users' => function ($q) {
-            $q->where('role', 'siswa');
-        }])->get();
+        $kelas = Kelas::withCount('users')->get();
         return view('admin.kelolakelas', compact('kelas'));
     }
 

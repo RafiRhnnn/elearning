@@ -18,6 +18,33 @@
     <main class="flex-1 p-4 sm:p-6 pt-16 sm:pt-6 sm:ml-0">
         <h2 class="text-xl sm:text-2xl font-bold mb-4">Kelola Pengguna</h2>
 
+        <!-- Filter Form -->
+        <form method="GET" action="" class="mb-4 flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-4">
+            <div>
+                <label for="search" class="block text-sm font-medium text-gray-700">Cari Nama/Email</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    placeholder="Cari...">
+            </div>
+            <div>
+                <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                <select name="role" id="role"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                    <option value="">Semua</option>
+                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="guru" {{ request('role') == 'guru' ? 'selected' : '' }}>Guru</option>
+                    <option value="siswa" {{ request('role') == 'siswa' ? 'selected' : '' }}>Siswa</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit"
+                    class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Filter
+                </button>
+            </div>
+        </form>
+        <!-- End Filter Form -->
+
         @if (session('success'))
             <div class="mb-4 text-green-600">
                 {{ session('success') }}
