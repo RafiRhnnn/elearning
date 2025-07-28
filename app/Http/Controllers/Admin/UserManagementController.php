@@ -10,20 +10,34 @@ use App\Models\Kelas;
 
 class UserManagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('kelas')->where('role', '!=', 'admin')->get();
+        $query = User::with('kelas')->where('role', '!=', 'admin');
+
+        // Filter search (nama/email)
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter role
+        if ($request->filled('role')) {
+            $query->where('role', $request->input('role'));
+        }
+
+        $users = $query->get();
+
         return view('admin.kelola_user', compact('users'));
     }
-
-
 
     public function edit(User $user)
     {
         $kelas = Kelas::all(); // Ambil semua kelas untuk dropdown
         return view('admin.edit_user', compact('user', 'kelas'));
     }
-
 
     public function update(Request $request, User $user)
     {
@@ -50,9 +64,6 @@ class UserManagementController extends Controller
 
         return redirect()->route('admin.kelola_user')->with('success', 'User berhasil diperbarui.');
     }
-
-
-
 
     public function destroy(User $user)
     {
