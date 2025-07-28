@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Kelas;
 use App\Http\Middleware\GuruOnly;
 use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\SiswaOnly;
@@ -52,6 +53,7 @@ Route::middleware(['auth', AdminOnly::class])
                 'totalUsers' => User::whereIn('role', ['guru', 'siswa'])->count(),
                 'totalGuru' => User::where('role', 'guru')->count(),
                 'totalSiswa' => User::where('role', 'siswa')->count(),
+                'totalKelas' => Kelas::count(), // Tambahkan baris ini
             ]);
         })->name('dashboard');
 
@@ -79,6 +81,10 @@ Route::middleware(['auth', AdminOnly::class])
         Route::get('/kelola-user/{user}/edit', [UserManagementController::class, 'edit'])->name('kelola_user.edit');
         Route::put('/kelola-user/{user}', [UserManagementController::class, 'update'])->name('kelola_user.update');
         Route::delete('/kelola-user/{user}', [UserManagementController::class, 'destroy'])->name('kelola_user.destroy');
+
+        // Kelola Kelas
+        Route::get('/kelola-kelas', [KelasController::class, 'kelolaKelas'])->name('kelola_kelas');
+        Route::get('/kelola-kelas/{kelas}/detail', [KelasController::class, 'detailKelas'])->name('kelola_kelas.detail');
     });
 
 /*

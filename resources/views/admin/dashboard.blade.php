@@ -32,6 +32,11 @@
                 <h3 class="text-base sm:text-lg font-semibold text-gray-700">Total Siswa</h3>
                 <p class="text-2xl sm:text-3xl font-bold text-indigo-600 mt-2">{{ $totalSiswa }}</p>
             </div>
+            {{-- Card baru untuk Total Kelas --}}
+            <div class="bg-white p-4 sm:p-6 rounded shadow text-center">
+                <h3 class="text-base sm:text-lg font-semibold text-gray-700">Total Kelas</h3>
+                <p class="text-2xl sm:text-3xl font-bold text-orange-600 mt-2">{{ $totalKelas }}</p>
+            </div>
         </div>
     </main>
 

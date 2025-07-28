@@ -56,7 +56,10 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Kelola Siswa</a>
+                <a href="{{ route('admin.kelola_kelas') }}"
+                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.kelola_kelas') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">
+                    Kelola Kelas
+                </a>
             </li>
             <li>
                 <a href="{{ route('admin.kelas.index') }}"
