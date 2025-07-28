@@ -36,7 +36,7 @@ class KelasController extends Controller
     public function detailKelas($kelas_id)
     {
         $kelas = \App\Models\Kelas::where('id', $kelas_id)->firstOrFail();
-        $siswa = \App\Models\User::where('role', 'siswa')->where('kelas_id', $kelas->id)->get();
+        $siswa = \App\Models\User::where('role', 'siswa')->where('kelas_id', $kelas->nama)->get();
         return view('admin.detail_kelas', compact('kelas', 'siswa'));
     }
 }
