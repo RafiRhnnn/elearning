@@ -19,7 +19,7 @@
                     <tr>
                         <th class="px-4 py-2 text-left">No</th>
                         <th class="px-4 py-2 text-left">Kelas</th>
-                        <th class="px-4 py-2 text-left">Total Siswa</th>
+                        {{-- <th class="px-4 py-2 text-left">Total Siswa</th> --}}
                         <th class="px-4 py-2 text-left">Aksi</th>
                     </tr>
                 </thead>
@@ -28,7 +28,7 @@
                         <tr class="border-b hover:bg-gray-50">
                             <td class="px-4 py-2">{{ $i + 1 }}</td>
                             <td class="px-4 py-2">{{ $k->nama }}</td>
-                            <td class="px-4 py-2">{{ $k->users_count }}</td>
+                            {{-- <td class="px-4 py-2">{{ $k->users_count }}</td> --}}
                             <td class="px-4 py-2">
                                 <a href="{{ route('admin.kelola_kelas.detail', $k->id) }}"
                                     class="text-blue-600 hover:underline">Detail</a>
