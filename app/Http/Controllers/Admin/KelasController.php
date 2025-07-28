@@ -26,4 +26,19 @@ class KelasController extends Controller
 
         return redirect()->route('admin.kelas.index')->with('success', 'Kelas berhasil ditambahkan.');
     }
+
+    public function kelolaKelas()
+    {
+        $kelas = \App\Models\Kelas::withCount(['users' => function ($q) {
+            $q->where('role', 'siswa');
+        }])->get();
+        return view('admin.kelolakelas', compact('kelas'));
+    }
+
+    public function detailKelas($kelas_id)
+    {
+        $kelas = \App\Models\Kelas::where('id', $kelas_id)->firstOrFail();
+        $siswa = \App\Models\User::where('role', 'siswa')->where('kelas_id', $kelas->nama)->get();
+        return view('admin.detail_kelas', compact('kelas', 'siswa'));
+    }
 }
