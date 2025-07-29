@@ -74,26 +74,27 @@
             </li> --}}
         </ul>
     </nav>
-</aside>
 
-<!-- Logout dan Footer di paling bawah -->
-<div class="fixed bottom-0 left-0 w-72 z-50 sm:w-72">
-    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-        class="flex items-center gap-3 py-2 px-4 rounded-lg text-red-200 hover:bg-red-100 hover:text-red-700 transition mb-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M17 16l4-4m0 0l-4-4m4 4H7"></path>
-            <path d="M3 12a9 9 0 0118 0 9 9 0 01-18 0z"></path>
-        </svg>
-        Logout
-    </a>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-        @csrf
-    </form>
-    <div
-        class="p-4 border-t border-green-400 text-xs text-white text-center bg-gradient-to-b from-green-700 to-green-500">
-        &copy; {{ date('Y') }} E-Learning Kelompok 9.
+    <!-- Logout dan Footer di paling bawah (sekarang di dalam aside, gunakan mt-auto) -->
+    <div class="mt-auto">
+        <a href="{{ route('logout') }}"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+            class="flex items-center gap-3 py-2 px-4 rounded-lg text-red-200 hover:bg-red-100 hover:text-red-700 transition mb-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M17 16l4-4m0 0l-4-4m4 4H7"></path>
+                <path d="M3 12a9 9 0 0118 0 9 9 0 01-18 0z"></path>
+            </svg>
+            Logout
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+            @csrf
+        </form>
+        <div
+            class="p-4 border-t border-green-400 text-xs text-white text-center bg-gradient-to-b from-green-700 to-green-500">
+            &copy; {{ date('Y') }} E-Learning Kelompok 9.
+        </div>
     </div>
-</div>
+</aside>
 
 <!-- Overlay for mobile -->
 <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 sm:hidden hidden"></div>
