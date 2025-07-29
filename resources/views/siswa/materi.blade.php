@@ -40,7 +40,7 @@
 
             <!-- Debug info -->
             <div class="bg-yellow-100 p-3 rounded mb-4 text-sm">
-                <strong>Debug Info:</strong><br>
+                <strong>Info:</strong><br>
                 Kelas Anda: {{ Auth::user()->kelas_id }}<br>
                 Total Materi Ditemukan: {{ $materiList->count() }}
             </div>
