@@ -1,6 +1,6 @@
 <!-- Mobile menu button -->
 <div class="sm:hidden fixed top-4 left-4 z-50">
-    <button id="mobile-menu-btn" class="bg-green-600 text-white p-2 rounded-md">
+    <button id="mobile-menu-btn" class="bg-green-600 text-white p-2 rounded-md shadow-lg">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
@@ -9,76 +9,122 @@
 
 <!-- Sidebar -->
 <aside id="sidebar"
-    class="w-64 bg-white shadow-md fixed sm:relative inset-y-0 left-0 transform -translate-x-full sm:translate-x-0 transition-transform duration-300 ease-in-out z-40 sm:block">
+    class="w-72 h-screen bg-gradient-to-b from-green-700 to-green-500 shadow-xl
+           fixed sm:sticky sm:top-0 inset-y-0 left-0 transform -translate-x-full sm:translate-x-0
+           transition-transform duration-300 ease-in-out z-40 sm:block flex flex-col">
     <!-- Close button for mobile -->
     <div class="sm:hidden flex justify-end p-4">
-        <button id="close-sidebar" class="text-gray-600">
+        <button id="close-sidebar" class="text-white">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>
     </div>
 
-    <div class="p-6 border-b border-gray-200">
-        <img src="{{ asset('img/logo.png') }}" alt="Logo UTB" class="h-10 mx-auto mb-2">
-        <h1 class="text-xl font-bold text-center text-green-700">Admin Panel</h1>
+    <!-- Branding & Admin Info -->
+    <div class="p-6 border-b border-green-400 flex flex-col items-center">
+        <img src="{{ asset('img/logo.png') }}" alt="Logo UTB" class="h-14 mb-2 rounded-full shadow-lg bg-white p-1">
+        <h1 class="text-2xl font-extrabold text-white tracking-wide">E-Learning Admin</h1>
+        <div class="mt-4 flex flex-col items-center">
+            <span class="mt-2 text-white font-semibold text-sm">Administrator</span>
+        </div>
     </div>
-    <nav class="p-4">
+
+    <nav class="flex-1 p-4 overflow-y-auto">
         <ul class="space-y-2">
             <li>
                 <a href="{{ route('admin.dashboard') }}"
-                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.dashboard') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">Dashboard</a>
-            </li>
-            <li>
-                <a href="{{ route('admin.pelajaran') }}"
-                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.pelajaran') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">Mata
-                    Pelajaran</a>
-            </li>
-            <li>
-                <a href="{{ route('admin.kelola_pelajaran') }}"
-                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.kelola_pelajaran') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">
-                    Kelola Pelajaran
-                </a>
-            </li>
-            <li>
-                <a href="#" class="block py-2 px-4 rounded hover:bg-green-100 text-gray-700">Kelola Guru</a>
-            </li>
-            <li>
-                <a href="{{ route('admin.register') }}"
-                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.register') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">
-                    Register
+                    class="flex items-center gap-3 py-2 px-4 rounded-lg transition {{ request()->routeIs('admin.dashboard') ? 'bg-white text-green-700 font-bold shadow' : 'text-white hover:bg-green-600/70' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6">
+                        </path>
+                    </svg>
+                    Dashboard
                 </a>
             </li>
             <li>
                 <a href="{{ route('admin.kelola_user') }}"
-                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.kelola_user') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">
+                    class="flex items-center gap-3 py-2 px-4 rounded-lg transition {{ request()->routeIs('admin.kelola_user') ? 'bg-white text-green-700 font-bold shadow' : 'text-white hover:bg-green-600/70' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path
+                            d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M16 3.13a4 4 0 010 7.75M8 3.13a4 4 0 000 7.75">
+                        </path>
+                    </svg>
                     Kelola User
                 </a>
             </li>
             <li>
+                <a href="{{ route('admin.pelajaran') }}"
+                    class="flex items-center gap-3 py-2 px-4 rounded-lg transition {{ request()->routeIs('admin.pelajaran') ? 'bg-white text-green-700 font-bold shadow' : 'text-white hover:bg-green-600/70' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4v16m0 0H3"></path>
+                    </svg>
+                    Mata Pelajaran
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.kelola_pelajaran') }}"
+                    class="flex items-center gap-3 py-2 px-4 rounded-lg transition {{ request()->routeIs('admin.kelola_pelajaran') ? 'bg-white text-green-700 font-bold shadow' : 'text-white hover:bg-green-600/70' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6"></path>
+                        <path d="M7 17v-2a2 2 0 012-2h6a2 2 0 012 2v2"></path>
+                    </svg>
+                    Kelola Pelajaran
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('admin.kelola_kelas') }}"
-                    class="block py-2 px-4 rounded hover:bg-green-100 {{ request()->routeIs('admin.kelola_kelas') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }}">
+                    class="flex items-center gap-3 py-2 px-4 rounded-lg transition {{ request()->routeIs('admin.kelola_kelas') ? 'bg-white text-green-700 font-bold shadow' : 'text-white hover:bg-green-600/70' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path
+                            d="M3 7v4a1 1 0 001 1h3V7a1 1 0 00-1-1H4a1 1 0 00-1 1zM17 7v4a1 1 0 001 1h3V7a1 1 0 00-1-1h-2a1 1 0 00-1 1z">
+                        </path>
+                        <path
+                            d="M3 17v-2a1 1 0 011-1h3v3a1 1 0 01-1 1H4a1 1 0 01-1-1zm14 0v-2a1 1 0 011-1h3v3a1 1 0 01-1 1h-2a1 1 0 01-1-1z">
+                        </path>
+                    </svg>
                     Kelola Kelas
                 </a>
             </li>
             <li>
                 <a href="{{ route('admin.kelas.index') }}"
-                    class="{{ request()->routeIs('admin.kelas.index') ? 'bg-green-100 text-green-700 font-semibold' : 'text-gray-700' }} block py-2 px-4 rounded hover:bg-green-100">
+                    class="flex items-center gap-3 py-2 px-4 rounded-lg transition {{ request()->routeIs('admin.kelas.index') ? 'bg-white text-green-700 font-bold shadow' : 'text-white hover:bg-green-600/70' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M12 4v16m8-8H4"></path>
+                    </svg>
                     Tambah Kelas
                 </a>
             </li>
             <li>
-                <a href="{{ route('logout') }}"
-                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                    class="block py-2 px-4 rounded text-red-600 hover:bg-red-100">
-                    Logout
+                <a href="{{ route('admin.register') }}"
+                    class="flex items-center gap-3 py-2 px-4 rounded-lg transition {{ request()->routeIs('admin.register') ? 'bg-white text-green-700 font-bold shadow' : 'text-white hover:bg-green-600/70' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M16 21v-2a4 4 0 00-3-3.87M12 7a4 4 0 110-8 4 4 0 010 8z"></path>
+                    </svg>
+                    Register User
                 </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
             </li>
         </ul>
     </nav>
+    <!-- Logout dan Footer di paling bawah -->
+    <div class="mt-auto">
+        <a href="{{ route('logout') }}"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+            class="flex items-center gap-3 py-2 px-4 rounded-lg text-red-200 hover:bg-red-100 hover:text-red-700 transition mb-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M17 16l4-4m0 0l-4-4m4 4H7"></path>
+                <path d="M3 12a9 9 0 0118 0 9 9 0 01-18 0z"></path>
+            </svg>
+            Logout
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+            @csrf
+        </form>
+        <div class="p-4 border-t border-green-400 text-xs text-white text-center">
+            &copy; {{ date('Y') }} E-Learning Kelompok 9.
+        </div>
+    </div>
 </aside>
 
 <!-- Overlay for mobile -->
