@@ -80,12 +80,8 @@
                 <!-- Jam -->
                 <div class="mb-6">
                     <label for="jam" class="block text-sm font-semibold text-gray-700">Jam</label>
-                    <select name="jam" id="jam" class="w-full p-2 border rounded bg-gray-50" required>
-                        @foreach (['07:00', '08:00', '09:00', '10:00', '11:00', '13:00', '14:00'] as $j)
-                            <option value="{{ $j }}" {{ $pelajaran->jam == $j ? 'selected' : '' }}>
-                                {{ $j }}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" name="jam" id="jam" class="w-full p-2 border rounded bg-gray-50"
+                        value="{{ old('jam', $pelajaran->jam) }}" required placeholder="Contoh: 07:00 - 09:00">
                 </div>
 
                 <!-- Tombol -->
